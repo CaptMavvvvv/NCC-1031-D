@@ -17,7 +17,7 @@ Here are some ideas to get you started:
 - 🔭 I’m currently working on KMUTNB INE
 - 🌱 I’m currently learning Information and Network Engineering
 - 👯 I’m looking to collaborate on True corps
-- 🤔 I’m looking for help with Chat GPT and Gemini
+- 🤔 I’m looking for help with Python, HTML and DOS
 - 💬 Ask me about: Up 2 u, I just have nothing to ask to
 - 📫 How to reach me: Thailand
 - 😄 Pronouns: He/Him
