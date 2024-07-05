@@ -14,6 +14,7 @@ Here are some ideas to get you started:
 - 😄 Pronouns: He/Him
 - ⚡ Fun fact: Just wanna be a network engineer
 --> 
+- First of all u can call me "Beam" and my callsign is "Capt.Maverick" or u can call me just "Mav"
 - 🔭 I’m currently working on KMUTNB INE
 - 🌱 I’m currently learning Information and Network Engineering
 - 👯 I’m looking to collaborate on True corps
