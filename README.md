@@ -21,5 +21,4 @@ Here are some ideas to get you started:
 - 🤔 I’m looking for help with Python, HTML and DOS
 - 💬 Ask me about: Up 2 u, I just have nothing to ask to
 - 📫 How to reach me: Thailand
-- 😄 Pronouns: He/Him
-- ⚡ Fun fact: Just wanna be a network engineer
+- ⚡ Fun fact: War Thunder player, R6S player, just wanna be a network engineer
