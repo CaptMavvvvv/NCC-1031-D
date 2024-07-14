@@ -9,3 +9,5 @@ average = statistics.mean(num_list)
 print("The average score is ", format(int(average)))
 if average >= 95:
     print("Congratulation!")
+else:
+    print("Thats bad, keep try")
