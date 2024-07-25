@@ -1,0 +1,6 @@
+body {
+    font: optional;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-style: italic;
+    background-color: darkgrey; /* This will apply a medium grey color */
+}
