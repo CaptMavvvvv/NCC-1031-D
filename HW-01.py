@@ -1,6 +1,6 @@
 def format_strings(*args):
     result = "".join(args) # Make letters stick together.
-    result = result.upper() # Make letters from lower letter to upper letter.
+    result = result.upper() # Make letters from lowercase to uppercase.
     return result
 
 if __name__ == '__main__':
