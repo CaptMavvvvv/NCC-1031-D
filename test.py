@@ -6,7 +6,7 @@ def format_strings(args):
     result = result.upper() # Turn the resulting string to uppercase
     return result # Return the final uppercase string
 
-if __name__ == '__main__':
+if __name__ == '__main__': # Ensures the following code only runs when the script is executed directly
     result = format_strings(["Hello", "world", "this", "is", "a", "test"])
     print(result) # Output: "HELLOWORLDTHISISATEST"
 
