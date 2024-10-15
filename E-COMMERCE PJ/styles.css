@@ -1,0 +1,261 @@
+/* Universal styles */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+.space-bg {
+    background-image: url('space-bg.jpg'); /* Space-themed background image */
+    background-size: cover;
+    background-attachment: fixed;
+    min-height: 100vh;
+}
+
+.header {
+    background-color: #2c2c2c; /* Change to your desired header background color */
+    padding: 20px;
+    text-align: center;
+    border-bottom: 3px solid #ffcc00; /* This adds a yellow underline */
+}
+
+.header h1 {
+    color: #fff;
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+}
+
+.navbar {
+    list-style-type: none;
+    padding: 0;
+}
+
+.navbar li {
+    display: inline;
+    margin: 0 15px;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: white; /* Change to your desired link color */
+}
+
+.navbar a:hover {
+    background-color: #555;
+}
+
+.products-section, .checkout-section {
+    margin: 20px;
+}
+
+.recommended-products {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.product {
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 200px;
+    transition: transform 0.3s ease;
+}
+
+.product:hover {
+    transform: scale(1.1);
+}
+
+.product img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.product-title {
+    font-size: 1.2rem;
+    margin: 15px 0;
+    color: #fff;
+}
+
+.product-price {
+    font-size: 1rem;
+    margin: 5px 0;
+    color: #ffcc00;
+}
+
+.add-to-cart-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-to-cart-btn:hover {
+    background-color: #0056b3;
+}
+
+#cart, #checkout {
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    margin: 20px auto;
+    max-width: 600px;
+}
+
+.proceed-btn, .confirm-btn {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.proceed-btn:hover, .confirm-btn:hover {
+    background-color: #218838;
+}
+
+/* Cart Button */
+.cart-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #ffcc00;
+    color: black;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    font-weight: bold;
+}
+
+.cart-button a {
+    color: black;
+    text-decoration: none;
+}
+
+.cart-button:hover {
+    background-color: #e0b800;
+}
+
+/* Cart Section */
+.cart-section {
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+#cart-items {
+    margin-bottom: 20px;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 15px;
+}
+
+.cart-item img {
+    width: 100px;
+    height: auto;
+    border-radius: 5px;
+}
+
+.cart-item-info {
+    flex-grow: 1;
+    text-align: left;
+    padding-left: 20px;
+}
+
+.cart-item-quantity {
+    display: flex;
+    align-items: center;
+}
+
+.quantity-input {
+    width: 40px;
+    text-align: center;
+    margin: 0 10px;
+    padding: 5px;
+}
+
+.cart-summary {
+    margin-top: 20px;
+    font-size: 1.2rem;
+}
+
+.checkout-btn {
+    background-color: #ffcc00;
+    color: black;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.checkout-btn:hover {
+    background-color: #e0b800;
+}
+
+/* Payment Section Styles */
+.payment-section {
+    width: 80%;
+    margin: 20px auto;
+    text-align: center;
+}
+
+.form-group {
+    margin: 15px 0;
+    text-align: left;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="month"],
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.submit-btn {
+    background-color: #ffcc00;
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.submit-btn:hover {
+    background-color: #e0b800;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: url('images/space-background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+}

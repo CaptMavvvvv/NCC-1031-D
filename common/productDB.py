@@ -34,3 +34,24 @@ def insertproducttale(*data):
             return False
     con.close()
 
+def updateproducttable(*data):
+    try:
+        con = sqlite3.connect('productDB.db')
+        sql = 'UPDATE product SET pname = "' + data[1] +\
+            '", totalA = ' + str(data[2]) +\
+            ', totalB = ' + str(data[3]) +\
+            'WHERE pid = "' + data[0] + ""
+        con.execute(sql)
+        con.commit()
+        return True
+    except con.Error as e:
+        if con:
+            print("error is " + e)
+            return False
+        con.close()
+
+'''def selectproductid():
+    try:
+        con = sqlite3.connect('productDB.db')
+        sql = 'SELECT pid FROM product order by pid'
+        data = con.execute(sql)'''

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galactic Shop - Recommended Products</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="space-bg">
+    <header class="header">
+        <a href="main-menu.html"><h1>Galactic Shop</h1>
+        </a>
+        <nav>
+            <ul class="navbar">
+                <li><a href="men.html">Men</a></li>
+                <li><a href="women.html">Women</a></li>
+                <li><a href="car.html">Car</a></li>
+                <li><a href="plane.html">Plane</a></li>
+            </ul>
+        </nav>
+
+        <!-- Cart Button at the top-right corner -->
+        <div class="cart-button">
+            <a href="cart.html" class="cart-link">
+                Cart (<span id="cart-count">0</span>)
+            </a>
+        </div>
+    </header>
+
+    <section id="products" class="products-section">
+        <h2>Recommended Products</h2>
+        <div class="recommended-products">
+
+            <!-- First Row -->
+            <div class="product-row">
+                <div class="product" data-id="1">
+                    <img src="men-product1.jpg" alt="Men Product 1">
+                    <h3 class="product-title">Men's Space Jacket</h3>
+                    <p class="product-price">$150.00</p>
+                    <button class="add-to-cart-btn" onclick="addToCart(1, 'Men\'s Space Jacket', 150)">Add to Cart</button>
+                </div>
+
+                <div class="product center-product" data-id="2">
+                    <img src="women-product1.jpg" alt="Women Product 1">
+                    <h3 class="product-title">Women's Galaxy Dress</h3>
+                    <p class="product-price">$180.00</p>
+                    <button class="add-to-cart-btn" onclick="addToCart(2, 'Women\'s Galaxy Dress', 180)">Add to Cart</button>
+                </div>
+
+                <div class="product" data-id="3">
+                    <img src="car-product1.jpg" alt="Car Product 1">
+                    <h3 class="product-title">Lunar Rover Tires</h3>
+                    <p class="product-price">$300.00</p>
+                    <button class="add-to-cart-btn" onclick="addToCart(3, 'Lunar Rover Tires', 300)">Add to Cart</button>
+                </div>
+            </div>
+
+            <!-- Second Row -->
+            <div class="product-row">
+                <div class="product" data-id="4">
+                    <img src="men-product2.jpg" alt="Men Product 2">
+                    <h3 class="product-title">Men's Cosmic Boots</h3>
+                    <p class="product-price">$200.00</p>
+                    <button class="add-to-cart-btn" onclick="addToCart(4, 'Men\'s Cosmic Boots', 200)">Add to Cart</button>
+                </div>
+
+                <div class="product center-product" data-id="5">
+                    <img src="women-product2.jpg" alt="Women Product 2">
+                    <h3 class="product-title">Women's Nebula Heels</h3>
+                    <p class="product-price">$220.00</p>
+                    <button class="add-to-cart-btn" onclick="addToCart(5, 'Women\'s Nebula Heels', 220)">Add to Cart</button>
+                </div>
+
+                <div class="product" data-id="6">
+                    <img src="car-product2.jpg" alt="Car Product 2">
+                    <h3 class="product-title">Astro Car Seat</h3>
+                    <p class="product-price">$350.00</p>
+                    <button class="add-to-cart-btn" onclick="addToCart(6, 'Astro Car Seat', 350)">Add to Cart</button>
+                </div>
+            </div>
+
+            <!-- Third Row -->
+            <div class="product-row">
+                <div class="product" data-id="7">
+                    <img src="men-product3.jpg" alt="Men Product 3">
+                    <h3 class="product-title">Men's Astro Sunglasses</h3>
+                    <p class="product-price">$75.00</p>
+                    <button class="add-to-cart-btn" onclick="addToCart(7, 'Men\'s Astro Sunglasses', 75)">Add to Cart</button>
+                </div>
+
+                <div class="product center-product" data-id="8">
+                    <img src="women-product3.jpg" alt="Women Product 3">
+                    <h3 class="product-title">Women's Star Earrings</h3>
+                    <p class="product-price">$90.00</p>
+                    <button class="add-to-cart-btn" onclick="addToCart(8, 'Women\'s Star Earrings', 90)">Add to Cart</button>
+                </div>
+
+                <div class="product" data-id="9">
+                    <img src="car-product3.jpg" alt="Car Product 3">
+                    <h3 class="product-title">Rocket Fuel</h3>
+                    <p class="product-price">$500.00</p>
+                    <button class="add-to-cart-btn" onclick="addToCart(9, 'Rocket Fuel', 500)">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- View More Button -->
+    <div class="view-more-button">
+        <a href="#products" class="view-more-link">View More</a>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 Galactic Shop - All Rights Reserved</p>
+    </footer>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
