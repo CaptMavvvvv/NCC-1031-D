@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Galactic Shop - Plane</title>
+    <title>Galactic Shop - Plane Products</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body class="space-bg">
     <header class="header">
-        <a href="index.html"><h1>Galactic Shop</h1>
-        </a>
+        <a href="index.html"><h1>Galactic Shop</h1></a>
         <nav>
             <ul class="navbar">
                 <li><a href="men.html">Men</a></li>
@@ -18,6 +17,7 @@
                 <li><a href="plane.html">Plane</a></li>
             </ul>
         </nav>
+        <!-- Cart Button at the top-right corner -->
         <div class="cart-button">
             <a href="cart.html" class="cart-link">
                 Cart (<span id="cart-count">0</span>)
@@ -25,40 +25,49 @@
         </div>
     </header>
 
-    <section class="product-section">
+    <section id="products" class="products-section">
         <h2>Plane Products</h2>
-        <div class="product-container">
-            <div class="product-item">
-                <img src="img/plane/model.jpg" alt="Plane Product 1">
-                <h3>Plane Model</h3>
-                <p>Price: $35</p>
-                <button class="add-to-cart">Add to Cart</button>
+        <div class="recommended-products">
+
+            <!-- First Row -->
+            <div class="product-row">
+                <div class="product" data-id="1">
+                    <img src="img/plane/model.jpg" alt="Plane Product 1">
+                    <h3 class="product-title">Plane Model</h3>
+                    <p class="product-price">$35</p>
+                    <button class="add-to-cart-btn" onclick="addToCart(1, 'Plane Model', 35)">Add to Cart</button>
+                </div>
+
+                <div class="product" data-id="2">
+                    <img src="img/plane/sims.png" alt="Plane Product 2">
+                    <h3 class="product-title">Flight Simulator</h3>
+                    <p class="product-price">$200</p>
+                    <button class="add-to-cart-btn" onclick="addToCart(2, 'Flight Simulator', 200)">Add to Cart</button>
+                </div>
+
+                <div class="product" data-id="3">
+                    <img src="img/plane/headset.jpg" alt="Plane Product 3">
+                    <h3 class="product-title">Aviation Headset</h3>
+                    <p class="product-price">$150</p>
+                    <button class="add-to-cart-btn" onclick="addToCart(3, 'Aviation Headset', 150)">Add to Cart</button>
+                </div>
             </div>
-            <div class="product-item">
-                <img src="img/plane/sims.png" alt="Plane Product 2">
-                <h3>Flight Simulator</h3>
-                <p>Price: $200</p>
-                <button class="add-to-cart">Add to Cart</button>
-            </div>
-            <div class="product-item">
-                <img src="img/plane/headset.jpg" alt="Plane Product 3">
-                <h3>Aviation Headset</h3>
-                <p>Price: $150</p>
-                <button class="add-to-cart">Add to Cart</button>
-            </div>
-        </div>
-        <div class="product-container">
-            <div class="product-item">
-                <img src="img/plane/planejacket.jpg" alt="Plane Product 4">
-                <h3>Flight Jacket</h3>
-                <p>Price: $90</p>
-                <button class="add-to-cart">Add to Cart</button>
-            </div>
-            <div class="product-item">
-                <img src="img/plane/planeaccess.jpg" alt="Plane Product 5">
-                <h3>Plane Accessories</h3>
-                <p>Price: $45</p>
-                <button class="add-to-cart">Add to Cart</button>
+
+            <!-- Second Row -->
+            <div class="product-row">
+                <div class="product" data-id="4">
+                    <img src="img/plane/planejacket.jpg" alt="Plane Product 4">
+                    <h3 class="product-title">Flight Jacket</h3>
+                    <p class="product-price">$90</p>
+                    <button class="add-to-cart-btn" onclick="addToCart(4, 'Flight Jacket', 90)">Add to Cart</button>
+                </div>
+
+                <div class="product" data-id="5">
+                    <img src="img/plane/planeaccess.jpg" alt="Plane Product 5">
+                    <h3 class="product-title">Plane Accessories</h3>
+                    <p class="product-price">$45</p>
+                    <button class="add-to-cart-btn" onclick="addToCart(5, 'Plane Accessories', 45)">Add to Cart</button>
+                </div>
             </div>
         </div>
     </section>

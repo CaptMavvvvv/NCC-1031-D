@@ -70,9 +70,11 @@ body, html {
     transform: scale(1.1);
 }
 
+/* Ensure consistent image size with cropping */
 .product img {
-    width: 100%;
-    height: auto;
+    width: 100%;          /* Take full width of the product container */
+    height: 200px;        /* Set a fixed height to crop the images */
+    object-fit: cover;    /* Crop the image, ensuring it covers the full area */
     border-radius: 5px;
 }
 
@@ -169,7 +171,8 @@ body, html {
 
 .cart-item img {
     width: 100px;
-    height: auto;
+    height: 100px;
+    object-fit: cover;   /* Ensure images in the cart section are also cropped consistently */
     border-radius: 5px;
 }
 
@@ -212,7 +215,7 @@ body, html {
 
 /* Payment Section Styles */
 .payment-section {
-    width: 80%;
+    width: 30%;
     margin: 20px auto;
     text-align: center;
 }
@@ -259,4 +262,3 @@ body {
     background-size: cover;
     color: white;
 }
-
