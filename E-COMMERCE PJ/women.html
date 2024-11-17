@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galactic Shop - Women's Products</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="space-bg">
+    <header class="header">
+        <a href="index.html"><h1>Galactic Shop</h1></a>
+        <nav>
+            <ul class="navbar">
+                <li><a href="men.html">Men</a></li>
+                <li><a href="women.html">Women</a></li>
+                <li><a href="car.html">Car</a></li>
+                <li><a href="plane.html">Plane</a></li>
+            </ul>
+        </nav>
+        <!-- Cart Button at the top-right corner -->
+        <div class="cart-button">
+            <a href="cart.html" class="cart-link">
+                Cart (<span id="cart-count">0</span>)
+            </a>
+        </div>
+    </header>
+
+    <section id="products" class="products-section">
+        <h2>Women's Products</h2>
+        <div class="recommended-products">
+
+            <!-- First Row -->
+            <div class="product-row">
+                <div class="product" data-id="1">
+                    <img src="img/women/dress2.png" alt="Women Product 1">
+                    <h3 class="product-title">Women's Dress</h3>
+                    <p class="product-price">$30</p>
+                    <button class="add-to-cart-btn" onclick="addToCart(1, 'Women Dress', 30)">Add to Cart</button>
+                </div>
+
+                <div class="product" data-id="2">
+                    <img src="img/women/bags.jpg" alt="Women Product 2">
+                    <h3 class="product-title">Women's Handbag</h3>
+                    <p class="product-price">$50</p>
+                    <button class="add-to-cart-btn" onclick="addToCart(2, 'Women Handbag', 50)">Add to Cart</button>
+                </div>
+
+                <div class="product" data-id="3">
+                    <img src="img/women/womenshoes.png" alt="Women Product 3">
+                    <h3 class="product-title">Women's Shoes</h3>
+                    <p class="product-price">$70</p>
+                    <button class="add-to-cart-btn" onclick="addToCart(3, 'Women Shoes', 70)">Add to Cart</button>
+                </div>
+            </div>
+
+            <!-- Second Row -->
+            <div class="product-row">
+                <div class="product" data-id="4">
+                    <img src="img/women/womenjacket.jpg" alt="Women Product 4">
+                    <h3 class="product-title">Women's Jacket</h3>
+                    <p class="product-price">$90</p>
+                    <button class="add-to-cart-btn" onclick="addToCart(4, 'Women Jacket', 90)">Add to Cart</button>
+                </div>
+
+                <div class="product" data-id="5">
+                    <img src="img/women/womenwatch.png" alt="Women Product 5">
+                    <h3 class="product-title">Women's Watch</h3>
+                    <p class="product-price">$120</p>
+                    <button class="add-to-cart-btn" onclick="addToCart(5, 'Women Watch', 120)">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>&copy; 2024 Galactic Shop - All Rights Reserved</p>
+    </footer>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

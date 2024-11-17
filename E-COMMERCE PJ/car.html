@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galactic Shop - Car Products</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="space-bg">
+    <header class="header">
+        <a href="index.html"><h1>Galactic Shop</h1></a>
+        <nav>
+            <ul class="navbar">
+                <li><a href="men.html">Men</a></li>
+                <li><a href="women.html">Women</a></li>
+                <li><a href="car.html">Car</a></li>
+                <li><a href="plane.html">Plane</a></li>
+            </ul>
+        </nav>
+        <!-- Cart Button at the top-right corner -->
+        <div class="cart-button">
+            <a href="cart.html" class="cart-link">
+                Cart (<span id="cart-count">0</span>)
+            </a>
+        </div>
+    </header>
+
+    <section id="products" class="products-section">
+        <h2>Car Products</h2>
+        <div class="recommended-products">
+
+            <!-- First Row -->
+            <div class="product-row">
+                <div class="product" data-id="1">
+                    <img src="img/car/gear.jpg" alt="Car Product 1">
+                    <h3 class="product-title">Car Accessories</h3>
+                    <p class="product-price">$25</p>
+                    <button class="add-to-cart-btn" onclick="addToCart(1, 'Car Accessories', 25)">Add to Cart</button>
+                </div>
+
+                <div class="product" data-id="2">
+                    <img src="img/car/batt.jpg" alt="Car Product 2">
+                    <h3 class="product-title">Car Battery</h3>
+                    <p class="product-price">$100</p>
+                    <button class="add-to-cart-btn" onclick="addToCart(2, 'Car Battery', 100)">Add to Cart</button>
+                </div>
+
+                <div class="product" data-id="3">
+                    <img src="img/car/Assurance_All_Season_5492.png" alt="Car Product 3">
+                    <h3 class="product-title">Car Tires</h3>
+                    <p class="product-price">$300</p>
+                    <button class="add-to-cart-btn" onclick="addToCart(3, 'Car Tires', 300)">Add to Cart</button>
+                </div>
+            </div>
+
+            <!-- Second Row -->
+            <div class="product-row">
+                <div class="product" data-id="4">
+                    <img src="img/car/71K2kaIFbXL.jpg" alt="Car Product 4">
+                    <h3 class="product-title">Car Cleaning Kit</h3>
+                    <p class="product-price">$40</p>
+                    <button class="add-to-cart-btn" onclick="addToCart(4, 'Car Cleaning Kit', 40)">Add to Cart</button>
+                </div>
+
+                <div class="product" data-id="5">
+                    <img src="img/car/seat.jpg" alt="Car Product 5">
+                    <h3 class="product-title">Car Seat Covers</h3>
+                    <p class="product-price">$60</p>
+                    <button class="add-to-cart-btn" onclick="addToCart(5, 'Car Seat Covers', 60)">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>&copy; 2024 Galactic Shop - All Rights Reserved</p>
+    </footer>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
