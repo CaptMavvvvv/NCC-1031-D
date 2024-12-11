@@ -1,17 +1,17 @@
-print("***calculate sum of odd and even number (Exit press 0)***")
+def change_calculator(price, paid):
 
-sum_even = 0
-sum_odd = 0
+    change = paid - price
+    print(f'Your total change is {change} baht')
 
-while True:
-        number = int(input("Enter number: "))
-        if number == 0:
-            break
-        elif number % 2 == 0:
-            sum_even += number
-        else:
-            sum_odd += number
+    dominations = [1000, 500, 100, 50, 20, 10, 5, 2, 1]
 
+    for domination in dominations:
+        count = change // domination
+        if count > 0:
+            print(f'{domination} baht: {count} piece')
+        change %= domination
 
-print(f'sum of even numbers = {sum_even}')
-print(f'sum of odd numbers = {sum_odd}')
+price = float(input("Enter you goods price: "))
+paid = float(input("Enter your paid: "))
+
+change_calculator(price, paid)

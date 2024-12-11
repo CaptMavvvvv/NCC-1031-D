@@ -1,19 +1,25 @@
-print(f'Welcome to the Number guessing Game!')
-print("I'm thinking of a number between 1 and 100. Can you guess it?")
-
 import random
 
-nums = random.randint(1, 100)
-print(nums)
-attempt = 0 #Set attempt to collect the data of attempt.
-guess = None
+def random_number():
 
-while guess != nums:
-    guess = int(input("Enter your guess: "))
+    print(f'Welcome to the Number guessing Game!')
+    print("I'm thinking of a number between 1 and 100. Can you guess it?")
 
-    if guess == nums:
-        print(f'Congrats! Your guess attempt is: {attempt}')
-    elif guess < nums:
-        print(f'Too low! Try again.')
-    elif guess > nums:
-        print(f'Too high! Try again.')
+    nums = random.randint(1, 100)
+    attempt = 0
+
+    while True:
+        guess = int(input("Enter your guess: "))
+        attempt += 1
+
+        if guess == nums:
+            print(f'Congrats! You guess number in {attempt} attempt.')
+            break
+        elif guess > nums:
+            print("Too high! Try again.")
+        else:
+            print("Too low! Try again.")
+
+print("That is the end of the game!")
+
+random_number()
