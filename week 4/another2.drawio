@@ -1,0 +1,43 @@
+<mxfile host="65bd71144e">
+    <diagram id="WXMwC1hddSlah61HzxiE" name="Page-1">
+        <mxGraphModel dx="666" dy="787" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="Start" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.terminator;whiteSpace=wrap;" vertex="1" parent="1">
+                    <mxGeometry x="375" y="40" width="100" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="End" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.terminator;whiteSpace=wrap;" vertex="1" parent="1">
+                    <mxGeometry x="120" y="700" width="100" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="Read Start (s)" style="shape=parallelogram;html=1;strokeWidth=2;perimeter=parallelogramPerimeter;whiteSpace=wrap;rounded=1;arcSize=12;size=0.23;" vertex="1" parent="1">
+                    <mxGeometry x="343" y="140" width="165" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="Read End (e)" style="shape=parallelogram;html=1;strokeWidth=2;perimeter=parallelogramPerimeter;whiteSpace=wrap;rounded=1;arcSize=12;size=0.23;" vertex="1" parent="1">
+                    <mxGeometry x="343" y="240" width="165" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="if&amp;nbsp; number / 3 == 0" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" vertex="1" parent="1">
+                    <mxGeometry x="335.5" y="590" width="180" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="if 3 %= 0" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="40" y="80" width="250" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=hexagon;perimeter=hexagonPerimeter2;arcSize=6;size=0.27;" vertex="1" parent="1">
+                    <mxGeometry x="350" y="340" width="150" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="396" y="400" width="60" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="s" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="360" y="370" width="60" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="e" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="430" y="370" width="60" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="e" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="395" y="340" width="60" height="30" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
