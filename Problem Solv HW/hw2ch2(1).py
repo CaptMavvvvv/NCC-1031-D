@@ -20,8 +20,6 @@ while count < N:
         print('Your grade is D+')
     elif score >= 50:
         print('Your grade is D')
-    elif score == 0:
-        break
     else:
         print('Your score is F')
 
