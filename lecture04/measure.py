@@ -1,7 +1,7 @@
 print('----------------')
-print('KPH\t\tMPH')
+print('KPH\tMPH')
 print('----------------')
 
-for kph in range(60, 131):
+for kph in range(60, 131,10):
     mph = kph * 0.6214
-    print(kph, '\t\t', format(float(mph), ',.1f'))
+    print(f'{kph} \t {float(mph):.1f}')

@@ -1,3 +1,7 @@
+#นายสุภชา เจริญสำเร็จกิจ INE 6706022610241
+#นายชยพัฒน์ วงษ์ทำมา INE 6706022610250
+#นางสาวหนึ่งฤทัย สระทองแพ INE 6706022610071
+
 class Node:
     def __init__(self, data):
         self.left = None
@@ -32,26 +36,6 @@ class Node:
             current = current.left
         return current
 
-    def delete(self, data):
-        if data < self.data:
-            if self.left:
-                self.left = self.left.delete(data)
-            return self
-        elif data > self.data:
-            if self.right:
-                self.right = self.right.delete(data)
-            return self
-        else:
-            if self.left is None:
-                return self.right
-            elif self.right is None:
-                return self.left
-            else:
-                min_node = self.right.find_min()
-                self.data = min_node.data
-                self.right = self.right.delete(min_node.data)
-                return self
-            
     def findval(self, lkpval):
         if lkpval < self.data:
             if self.left is None:
@@ -87,6 +71,25 @@ class Node:
             res = res + self.postorderTraversal(root.right)
             res.append(root.data)
         return res
+    
+#Delate Node
+    def delete(self, data):
+        if data < self.data:
+            if self.left:
+                self.left = self.left.delete(data)
+        elif data > self.data:
+            if self.right:
+                self.right = self.right.delete(data)
+        else:
+            if self.left is None:
+                return self.right
+            elif self.right is None:
+                return self.left
+            else:
+                min_node = self.right.find_min()
+                self.data = min_node.data
+                self.right = self.right.delete(min_node.data)
+        return self
 
 root = Node(10)
 root.insert(30)
@@ -110,8 +113,4 @@ root.PrintTree()
 
 root = root.delete(10)
 print("\nTree after deleting 10:")
-root.PrintTree()
-
-root = root.delete(47)
-print("\nTree after deleting 47:")
 root.PrintTree()

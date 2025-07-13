@@ -8,3 +8,5 @@ def find_multiples_of_three(start: int, end: int) -> list:
          result.append(i)
 
     return result
+
+find_multiples_of_three(list)
