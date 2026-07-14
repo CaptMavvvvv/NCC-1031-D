@@ -1,0 +1,5 @@
+thistuple = ("apple", "banana", "cherry", "kiwi", "mango")
+print(thistuple[1])
+print(thistuple[0:2])
+print(thistuple[:1])
+print(thistuple[-1])
