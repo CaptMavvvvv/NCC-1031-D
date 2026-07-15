@@ -1,5 +1,5 @@
 # Python Tuple - รายการแบบคงที่ แก้ไขไม่ได้
-
+---
 
 #### Tuple Characteristic   
 > สร้างด้วยวงเล็บโค้ง ( )
@@ -59,6 +59,7 @@ thistuple = tuple(x)
 ### Unpack Tuple
 > การกำหนดค่า เรียกว่า 'packing'
 > การดึงค่ากลับมาไว้ในตัวแปร เรียกว่า 'unpacking'
+
 ตัวอย่างการ extract จาก tuple
 ```python
 fruits = ("apple", "banana", "cherry")
