@@ -17,7 +17,7 @@ Here are some ideas to get you started:
 ### First of all u can call me "Beam" and my callsign's "Capt.Maverick" or u can call me just "Mav" or "Capt"
 - 🌱 I’m currently studying Information and Network Engineering at KMUTNB
 - 👯 I’m looking to collaborate on NTT Data Thailand, AIT Thailand, TPS
-- 🤔 I’m looking for help with Python, HTML and DOS
+- 🤔 I’m looking for help with Python, JS, Networking, and other languages
 - 💬 Ask me about: Up 2 u, I just have nothing to ask to
 - 📫 How to reach me: KMUTNB, Thailand
 - ⚡ Fun fact: War Thunder player, R6S player, just wanna be a network engineer
