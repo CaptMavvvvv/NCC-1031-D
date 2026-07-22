@@ -3,6 +3,7 @@
 
 ## For loop Characteristic
 __เป็นลูปประเภท "Collection-Controlled Loop" หรือ "Count-Controlled Loop" คือมันจะทำหน้าที่ "เดินเหยียบไปบนสมาชิกทีละตัว" (Iterate) ในวัตถุหรือชุดข้อมูลที่เรากำหนดไว้จนครบถ้วน__
+*__ # เหมาะกับสถานการณ์ที่ทราบจำนวนครั้งในการวนซ้ำล่วงหน้า__*
 
 ### Basic For loop Syntax
 ```python

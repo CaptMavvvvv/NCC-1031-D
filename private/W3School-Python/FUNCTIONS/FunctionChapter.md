@@ -1,12 +1,12 @@
 # Python Functions
 ---
 
-## Functions Characteristic
+## Functions Characteristic (คุณลักษณะของ Function)
 - __Function เป็นกลุ่มโค้ดที่จะทำงานต่อเมื่อถูกเรียกใช้เท่านั้น__
 - __Function สามารถส่งคืนข้อมูลเป็นผลลัพธ์ได้__
 - __Function ช่วยลดการเขียนโค้ดที่ซ้ำซ้อน__
 
-### Basic Function Syntax
+### Basic Function Syntax (ไวยากรณ์พื้นฐาน)
 > Function มี 'def' เป็นคีย์เวิร์ดหลัก และตามด้วยชื่อ Function และวงเล็บ
 ```python
 def my_function():
@@ -44,7 +44,7 @@ print(fahrenheit_to_celsius(95)) # เหล่านี้คือการน
 print(fahrenheit_to_celsius(60))
 ```
 
-### Return Values
+### Return Values (การคืนค่ากลับ)
 Func จะสามารถส่งค่าคืนกลับมายังโค้ดโดยการใช้คำสั่ง return 
 ```python
 def get_greeting():
@@ -53,7 +53,7 @@ message = get_greeting()
 print(message)
 ```
 
-### Parameter and Argument
+### Parameter and Argument 
 Arguments คือข้อมูลจริงที่ถูกส่งเข้าไปใน __ตอนเรียกใช้งานฟังก์ชัน__
 - สามารถส่งข้อมูลเข้าไปใน Function ได้โดยการใช้ Parameter
 - Parameter จะถูกระบุไว้หลังชื่อ Function และอยู่ในวงเล็บอีกที ซึ่งเราสามารถเพิ่ม Parameter ได้มากตามต้องการ เพียงแค่คั่นด้วย comma ( , )
@@ -73,11 +73,51 @@ LinusRefsnes
 '''
 ```
 
-#### Numbers of Argument
+#### Numbers of Argument (จำนวนของ Arg)
 โดยหลักแล้ว Function จะถูกเรียกใช้ด้วยจำนวน Argument ที่ถูกต้อง
 สมมติถ้า Function คาดหวัง 2 Argument เราก็ต้องเรียกใช้ให้ครบทั้ง 2 Argument
 ```python
 def my_function(fname, lname):
     print(fname + "" + lname)
 my_function("Adolf", "Hitler")
+```
+
+ถ้าเกิด Function รับได้เพียงแค่ 1 ค่า ทั้งๆ ที่ควรจะได้ 2 (fname, lname) จะโดนข้อความ error
+```python
+def my_function(fname, lname):
+    print(fname + "" + lname)
+my_function("Adolf") # Error
+```
+
+#### Dafault Parameter Values
+เราสามารถกำหนดค่าตั้งต้นของ Parameter ไว้ได้ ซึ่งกรณีที่ Function ถูกเรียกใช้โดยที่ไม่มี Argument มันก็จะใช้ Default Values หรือค่าตั้งต้นของ Parameter
+```python
+def my_function(name = "friend"):
+    print("Hello", name)
+my_function("Adolf") # Hello Adolf
+my_function("Stalin") # Hello Stalin
+my_function() # Hello friend
+my_function("Truman") # Hello Truman
+```
+
+#### Keyword Arguments
+เราสามารถส่ง Argument ได้ด้วยไวยากรณ์แบบ key = value
+```python
+def my_function(animal, name):
+    print("I have a", animal)
+    print("My", animal + "'s name is", name)
+my_function(animal = "dog", name = "Buddy") 
+"""Output = 
+I have a dog
+My dog's name is Buddy"""
+```
+
+#### Positional Arguments (การเรียก Arg ตามตำแหน่ง)
+เมื่อเราเรียกใช้ Function ที่มี Argument แต่ไม่มีการใช้ keyword, Argument แบบนั้นจะเรียกว่า Positional Arguments หรือการเรียกตามตำแหน่ง
+__Reminder__ : Postional Arg จะต้องถูกเรียงตามลำดับที่ถูกต้อง
+```python
+def my_function(animal, name):
+    print("I have a", animal)
+    print("My", animal + "'s name is", name)
+my_function("dog", "Buddy") # animal = dog, name = Buddy
 ```
