@@ -1,6 +1,6 @@
 user_string = str(input("Enter the word with string: "))
 string_result = ""
-vowels = "aeiouAEIOU"
+vowels = "AEIOU"
 for stri in user_string:
     upper_str = stri.upper()
     if upper_str in vowels:

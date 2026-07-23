@@ -105,7 +105,7 @@ my_function("Truman") # Hello Truman
 ```python
 def my_function(animal, name):
     print("I have a", animal)
-    print("My", animal + "'s name is", name)
+    print(f"My {animal} 's name is {name}")
 my_function(animal = "dog", name = "Buddy") 
 """Output = 
 I have a dog
@@ -118,6 +118,33 @@ __Reminder__ : Postional Arg จะต้องถูกเรียงตาม
 ```python
 def my_function(animal, name):
     print("I have a", animal)
-    print("My", animal + "'s name is", name)
+    print(f"My {animal} 's name is {name}")
 my_function("dog", "Buddy") # animal = dog, name = Buddy
 ```
+
+#### การนำ Positional กับ Keyword Arguments มาใช้คู่กัน
+เราสามารถนำสองสิ่งมาใช้รวมกันได้ โดยที่ __Positional__ ต้องมาก่อน __Keyword__ เสมอ
+```python
+def my_function(animal,name, age):
+    print(f'I have a {age} year old {animal} named {name}')
+my_function("dog", name = "buddy", age = 5)
+```
+
+#### Passing Different Data Type (การส่งผ่านข้อมูลประเภทต่าง ๆ)
+เราสามารถส่งข้อมูลประเภทใดก็ได้เป็น Argument ให้กับ Function เช่น String, Number, List, Dictionary, ฯลฯ โดยที่ประเภทข้อมูลจะถูกรักษาไว้ภายในฟังก์ชัน
+```python
+def my_function(fruits): # ส่ง List เป็น Arg
+    for fruit in fruits:
+        print(fruit)
+my_fruits = ["apple", "banana", "cherry"]
+my_function(my_fruits)
+```
+
+```python
+def my_function(person): # ส่ง Dict เป็น Arg
+    print("Name": person["name"])
+    print("Age": person["age"])
+my_person = {"name": "Emil", "age": 25}
+my_function(my_person)
+```
+
