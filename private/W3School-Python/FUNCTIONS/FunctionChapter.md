@@ -148,3 +148,23 @@ my_person = {"name": "Emil", "age": 25}
 my_function(my_person)
 ```
 
+#### Return Different Data Types (การส่งค่าคืนข้อมูลประเภทต่าง ๆ)
+Functions สามารถส่งค่าคืนได้กับข้อมูลทุกปรเภท (lists, tuples, dicts, etc)
+```python
+def my_function():
+    return ["apple", "banana", "cherry"] # Return as lists
+fruits = my_function()
+print(fruits[0])
+print(fruits[1])
+print(fruits[2])
+```
+
+```python
+def my_function():
+    return (10,20) # Return as tuples
+fruits = my_function()
+print("x:", x)
+print("y:", y)
+```
+
+#### Positional-Only Arguments
