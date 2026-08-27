@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "help": "^3.0.2",
+    "matplotlib": "^1.0.0",
+    "networkx": "^0.0.1-security"
+  }
+}
