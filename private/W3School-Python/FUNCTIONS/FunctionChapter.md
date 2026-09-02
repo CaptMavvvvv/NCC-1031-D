@@ -168,3 +168,9 @@ print("y:", y)
 ```
 
 #### Positional-Only Arguments
+เราสามารถระบุให้ Function มีได้เฉพาะ Positional-Only arg (Argument แบบระบุตำแหน่งเท่านั้น)
+```python
+def my_function(name, /):
+    print('Hello', name)
+my_function("Emil") # Output: Hello Emil
+```
