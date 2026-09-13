@@ -173,6 +173,7 @@ print("y:", y) # Output : y: 20
 ```
 
 #### Positional-Only Arguments
+<<<<<<< HEAD
 ในการระบุ Positional-Only Argument ต้องใช้ , / ต่อหลัง arg
 ```python
 def my_function(name, /):
@@ -200,3 +201,11 @@ my_function(name = "Emil") # Output : Error
 def my_function(*, name):
     print("Hello", name)
 my_function(name = "Emil")
+=======
+เราสามารถระบุให้ Function มีได้เฉพาะ Positional-Only arg (Argument แบบระบุตำแหน่งเท่านั้น)
+```python
+def my_function(name, /):
+    print('Hello', name)
+my_function("Emil") # Output: Hello Emil
+```
+>>>>>>> d8b973c46438e511cecfb73c7573eb328574016f
