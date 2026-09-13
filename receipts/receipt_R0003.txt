@@ -1,0 +1,35 @@
+════════════════════════════════════════════════════
+      CAR RENTAL MANAGEMENT SYSTEM
+              OFFICIAL RECEIPT
+════════════════════════════════════════════════════
+  Receipt No.  : R0003
+  Issued At    : 2026-09-13 19:34:48
+  Storage      : Binary (.bin) | struct | Little-Endian
+────────────────────────────────────────────────────
+  CUSTOMER
+    ID     : 2
+    Name   : Mew
+    Phone  : 111
+    Email  : -
+    Tier   : ★☆☆ BRONZE  —  0% discount
+────────────────────────────────────────────────────
+  VEHICLE
+    ID       : 1
+    Model    : Porsche 911 GT3
+    Plate    : 12456
+    Category : Other
+    Rate     :   2,000.00 THB/day
+────────────────────────────────────────────────────
+  RENTAL PERIOD
+    From  : 01-01-2026
+    To    : 15-01-2026
+    Days  : 15
+────────────────────────────────────────────────────
+  CHARGES
+    Gross Total  :  30,000.00 THB
+    Discount     :    0%   -     0.00 THB
+    ────────────────────────────────────────
+    AMOUNT DUE   :  30,000.00 THB
+════════════════════════════════════════════════════
+    Thank you for choosing our service!
+════════════════════════════════════════════════════

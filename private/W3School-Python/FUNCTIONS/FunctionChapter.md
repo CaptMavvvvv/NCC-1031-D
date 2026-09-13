@@ -53,6 +53,10 @@ message = get_greeting()
 print(message)
 ```
 
+---
+
+## Python Function Argument
+
 ### Parameter and Argument 
 Arguments คือข้อมูลจริงที่ถูกส่งเข้าไปใน __ตอนเรียกใช้งานฟังก์ชัน__
 - สามารถส่งข้อมูลเข้าไปใน Function ได้โดยการใช้ Parameter
@@ -145,7 +149,8 @@ def my_function(person): # ส่ง Dict เป็น Arg
     print("Name": person["name"])
     print("Age": person["age"])
 my_person = {"name": "Emil", "age": 25}
-my_function(my_person)
+my_function(my_person) """Name: Emil
+                          Age: 25"""
 ```
 
 #### Return Different Data Types (การส่งค่าคืนข้อมูลประเภทต่าง ๆ)
@@ -154,17 +159,44 @@ Functions สามารถส่งค่าคืนได้กับข้�
 def my_function():
     return ["apple", "banana", "cherry"] # Return as lists
 fruits = my_function()
-print(fruits[0])
-print(fruits[1])
-print(fruits[2])
+print(fruits[0]) # Output : apple
+print(fruits[1]) # Output : banana
+print(fruits[2]) # Output : cherry
 ```
 
 ```python
 def my_function():
     return (10,20) # Return as tuples
 fruits = my_function()
-print("x:", x)
-print("y:", y)
+print("x:", x) # Output : x: 10
+print("y:", y) # Output : y: 20
 ```
 
 #### Positional-Only Arguments
+ในการระบุ Positional-Only Argument ต้องใช้ , / ต่อหลัง arg
+```python
+def my_function(name, /):
+    print("Hello", name)
+my_function("Emil") # Output : Hello Emil
+```
+
+ถ้าไม่มี , / จะสามารถใช้ Parameter แบบ Keyword ได้ แม้ว่าฟังก์ชันจะคาดหวังพารามิเตอร์แบบระบุตำแหน่งก็ตาม
+```python
+def my_function(name):
+    print("Hello", name)
+my_function(name = "Emil") # Output: Hello Emil
+```
+
+แบบนี้จะไม่ได้ มันจะ Error
+```python
+def my_function(name, /):
+    print("Hello", name)
+my_function(name = "Emil") # Output : Error
+```
+
+#### Keyword-Only Arguments
+หากอยากระบุให้ Func รับได้เฉพาะ Keyword ในใส่ *, ไว้ที่หน้า arg
+```python
+def my_function(*, name):
+    print("Hello", name)
+my_function(name = "Emil")
