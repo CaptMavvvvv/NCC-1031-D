@@ -350,7 +350,6 @@ def _auto_or_manual_id(manager: FileManager, label: str) -> Optional[int]:
 # ==============================================================================
 
 TIER_CONFIG = {
-    #  tier_name : (min_lifetime_rentals, discount_rate, display_label)
     'GOLD':   (6, 0.10, '★★★ GOLD    — 10% discount'),
     'SILVER': (3, 0.05, '★★☆ SILVER  —  5% discount'),
     'BRONZE': (0, 0.00, '★☆☆ BRONZE  —  0% discount'),
@@ -386,10 +385,7 @@ def generate_rental_receipt(
     gross_total:  float,
     final_total:  float,
 ) -> str:
-    """
-    Write a formatted plain-text receipt to receipts/receipt_R####.txt.
-    Returns the file path. Touches no .bin file.
-    """
+    
     os.makedirs(RECEIPT_DIR, exist_ok=True)
     filepath = os.path.join(RECEIPT_DIR, f"receipt_R{rental_data['ID']:04d}.txt")
 
@@ -432,7 +428,7 @@ def generate_rental_receipt(
         f"    {'─'*40}",
         f"    AMOUNT DUE   : {final_total:>10,.2f} THB",
         border,
-        "    Thank you for choosing our service!",
+        "    Thank you for your rental najaaa :)    ",
         border,
         "",
     ]
