@@ -2,34 +2,34 @@
       CAR RENTAL MANAGEMENT SYSTEM
               OFFICIAL RECEIPT
 ════════════════════════════════════════════════════
-  Receipt No.  : R0004
-  Issued At    : 2026-09-14 00:13:06
+  Receipt No.  : R0001
+  Issued At    : 2026-09-14 23:56:12
   Storage      : Binary (.bin) | struct | Little-Endian
 ────────────────────────────────────────────────────
   CUSTOMER
-    ID     : 2
-    Name   : Mew
-    Phone  : 111
+    ID     : 1
+    Name   : beam
+    Phone  : 0911913075
     Email  : -
     Tier   : ★☆☆ BRONZE  —  0% discount
 ────────────────────────────────────────────────────
   VEHICLE
-    ID       : 3
-    Model    : Porsche Panamera 4S
-    Plate    : 5534
-    Category : Sedan
-    Rate     :   1,500.00 THB/day
+    ID       : 1
+    Model    : Porsche 911 GT3
+    Plate    : 2222
+    Category : Sport
+    Rate     :   4,000.00 THB/day
 ────────────────────────────────────────────────────
   RENTAL PERIOD
-    From  : 17-03-2005
-    To    : 14-09-2026
-    Days  : 7852
+    From  : 01-01-2026
+    To    : 05-01-2026
+    Days  : 5
 ────────────────────────────────────────────────────
   CHARGES
-    Gross Total  : 11,778,000.00 THB
+    Gross Total  :  20,000.00 THB
     Discount     :    0%   -     0.00 THB
     ────────────────────────────────────────
-    AMOUNT DUE   : 11,778,000.00 THB
+    AMOUNT DUE   :  20,000.00 THB
 ════════════════════════════════════════════════════
-    Thank you for choosing our service!
+    Thank you for your rental najaaa :)    
 ════════════════════════════════════════════════════

@@ -2,6 +2,7 @@ import struct
 import os
 import datetime
 import traceback
+import unicodedata as _ud
 from typing import Dict, Any, Tuple, Optional, List, Union
 
 # ==============================================================================
@@ -16,8 +17,8 @@ CAR_ENCODING    = 'utf-8'
 CAR_CATEGORIES  = ['Sedan', 'SUV', 'Pickup', 'Van', 'Hatchback', 'Sport', 'Other']
 
 # Customer: IsActive(1)+ID(4)+Name(50)+Phone(15)+Email(30) = 100 bytes
-CUSTOMER_FORMAT      = '<?i50s15s30s'
-CUSTOMER_FORMAT_KEYS = ['IsActive', 'ID', 'Name', 'Phone', 'Email']
+CUSTOMER_FORMAT      = '<?i50s15s30sI'
+CUSTOMER_FORMAT_KEYS = ['IsActive', 'ID', 'Name', 'Phone', 'Email', 'Points']
 CUSTOMER_FILE_NAME   = 'customers.bin'
 CUSTOMER_ENCODING    = 'utf-8'
 
@@ -214,7 +215,8 @@ class CarManager(FileManager):
 
 class CustomerManager(FileManager):
     def __init__(self):
-        super().__init__(CUSTOMER_FORMAT, CUSTOMER_FORMAT_KEYS, CUSTOMER_FILE_NAME, CUSTOMER_ENCODING)
+        super().__init__(CUSTOMER_FORMAT, CUSTOMER_FORMAT_KEYS,
+                         CUSTOMER_FILE_NAME, CUSTOMER_ENCODING)
 
     def _pack_record(self, data: Dict[str, Any]) -> bytes:
         return struct.pack(
@@ -224,6 +226,7 @@ class CustomerManager(FileManager):
             data['Name'].encode(self.encoding).ljust(50, b'\x00'),
             data['Phone'].encode(self.encoding).ljust(15, b'\x00'),
             data.get('Email', '').encode(self.encoding).ljust(30, b'\x00'),
+            int(data.get('Points', 0)),          # ← ใหม่
         )
 
     def _unpack_record(self, chunk: bytes) -> Dict[str, Any]:
@@ -234,7 +237,21 @@ class CustomerManager(FileManager):
             'Name':     u[2].split(b'\x00', 1)[0].decode(self.encoding, errors='ignore').strip(),
             'Phone':    u[3].split(b'\x00', 1)[0].decode(self.encoding, errors='ignore').strip(),
             'Email':    u[4].split(b'\x00', 1)[0].decode(self.encoding, errors='ignore').strip(),
+            'Points':   u[5],                    # ← ใหม่
+            'Tier':     get_tier(u[5]),           # ← derived, ไม่ได้เก็บในไฟล์
         }
+
+    def add_points(self, cust_id: int, amount_thb: float) -> None:
+        """บวก 1 point ต่อ 100 THB — อัปเดต binary record ทันที"""
+        earned = int(amount_thb // 100)
+        if earned <= 0:
+            return
+        result = self.get_record_by_id(cust_id)
+        if result:
+            rec, _ = result
+            self.update_record(cust_id, {'Points': rec['Points'] + earned})
+            print(f"  [Tier] +{earned} pts → รวม {rec['Points']+earned} pts"
+                  f" ({get_tier(rec['Points']+earned)})")
 
 class RentalManager(FileManager):
     def __init__(self):
@@ -345,9 +362,117 @@ def _auto_or_manual_id(manager: FileManager, label: str) -> Optional[int]:
         return None
     return manual
 
+def get_tier(points: int) -> str:
+    for threshold, tier in TIER_TABLE:
+        if points >= threshold:
+            return tier
+
+def is_car_available_for_period(
+    rental_mgr: RentalManager,
+    car_id: int,
+    start_date: int,
+    end_date: int
+) -> bool:
+    try:
+        requested_start = datetime.datetime.strptime(
+            str(start_date).zfill(8), '%d%m%Y'
+        )
+        requested_end = datetime.datetime.strptime(
+            str(end_date).zfill(8), '%d%m%Y'
+        )
+    except ValueError:
+        return False
+
+    if requested_start > requested_end:
+        return False
+
+    for rental in rental_mgr.get_active_records():
+        if rental['CarID'] != car_id:
+            continue
+
+        existing_start = datetime.datetime.strptime(
+            str(rental['StartDate']).zfill(8), '%d%m%Y'
+        )
+        existing_end = datetime.datetime.strptime(
+            str(rental['EndDate']).zfill(8), '%d%m%Y'
+        )
+        if requested_start <= existing_end and requested_end >= existing_start:
+            return False
+    return True
+
+def get_customer_rental_history(
+    rental_mgr: RentalManager,
+    customer_id: int
+) -> List[Dict[str, Any]]:
+    return [
+        rental
+        for rental in rental_mgr.get_all_records()
+        if rental['CustomerID'] == customer_id
+    ]
+
+def show_customer_rental_history(
+    rental_mgr: RentalManager,
+    customer_id: int
+) -> None:
+    history = get_customer_rental_history(rental_mgr, customer_id)
+
+    if not history:
+        print(f"  // ลูกค้า ID {customer_id} ไม่มีประวัติการเช่า \\")
+        return
+
+    print(f"\n  -- ประวัติการเช่าของลูกค้า ID {customer_id} --")
+
+    for rental in history:
+        status = "ACTIVE" if rental['IsActive'] else "CLOSED"
+
+        print(
+            f"  Rental #{rental['ID']:<5} "
+            f"Car ID:{rental['CarID']:<4} "
+            f"{format_date_display(rental['StartDate'])} -> "
+            f"{format_date_display(rental['EndDate'])}  "
+            f"{rental['TotalPrice']:>10,.2f} THB  "
+            f"[{status}]"
+        )
+
+def get_car_rental_history(
+    rental_mgr: RentalManager,
+    car_id: int
+) -> List[Dict[str, Any]]:
+    return [
+        rental
+        for rental in rental_mgr.get_all_records()
+        if rental['CarID'] == car_id
+    ]
+
+def show_car_rental_history(
+    rental_mgr: RentalManager,
+    car_id: int
+) -> None:
+    history = get_car_rental_history(rental_mgr, car_id)
+    if not history:
+        print(f"  // รถ ID {car_id} ไม่มีประวัติการเช่า \\")
+        return
+    print(f"\n  -- ประวัติการเช่าของรถ ID {car_id} --")
+    for rental in history:
+        status = "ACTIVE" if rental['IsActive'] else "CLOSED"
+        print(
+            f"  Rental #{rental['ID']:<5} "
+            f"Customer ID:{rental['CustomerID']:<4} "
+            f"{format_date_display(rental['StartDate'])} -> "
+            f"{format_date_display(rental['EndDate'])}  "
+            f"{rental['TotalPrice']:>10,.2f} THB  "
+            f"[{status}]"
+        )
+
 # ==============================================================================
 # 4b. Member Tier System  (Feature 1 — no binary format change)
 # ==============================================================================
+
+TIER_TABLE = [
+    (5000, 'Gold'),
+    (1000, 'Silver'),
+    (0,    'Bronze'),
+]
 
 TIER_CONFIG = {
     'GOLD':   (6, 0.10, '★★★ GOLD    — 10% discount'),
@@ -462,7 +587,7 @@ def run_car_menu(car_mgr: CarManager):
         elif ch == 'X': break
 
 def _car_table_header():
-    h = f"  {'ID':<5} {'รุ่นรถ':<30} {'ทะเบียน':<12} {'ประเภท':<12} {'THB/วัน':>10} {'สถานะ':<10}"
+    h = f"  {'ID':<5} {'รุ่นรถ':<32} {'ทะเบียน':<13} {'ประเภท':<11} {'THB/วัน':>10} {'สถานะ':<10}"
     sep = "  " + "-" * 78
     print(sep); print(h); print(sep)
 
@@ -622,7 +747,7 @@ def run_customer_menu(cust_mgr: CustomerManager, rental_mgr: RentalManager):
         elif ch == 'X': break
 
 def _cust_table_header():
-    h = f"  {'ID':<5} {'ชื่อ-นามสกุล':<32} {'โทรศัพท์':<16} {'Email':<30}"
+    h = f"  {'ID':<5} {'ชื่อ-นามสกุล':<35} {'โทรศัพท์':<18} {'Email':<30}"
     sep = "  " + "-"*86
     print(sep); print(h); print(sep)
 
@@ -636,9 +761,15 @@ def _cust_add(mgr: CustomerManager):
         return
 
     name  = input("  ชื่อ-นามสกุล (สูงสุด 50 ตัวอักษร): ").strip()[:50]
-    phone = input("  เบอร์โทรศัพท์ (สูงสุด 15 หลัก): ").strip()[:15]
-    email = input("  อีเมล (สูงสุด 30 ตัวอักษร, Enter ถ้าไม่มี): ").strip()[:30]
-
+    phone = input("  เบอร์โทรศัพท์ (สูงสุด 15 หลัก): ").strip()[:15] # Phone Number
+    if not validate_phone(phone):
+        print("  !! เบอร์โทรศัพท์ไม่ถูกต้อง !!")
+        return
+    email = input("  อีเมล (สูงสุด 30 ตัวอักษร, Enter ถ้าไม่มี): ").strip()[:30] # Email
+    if not validate_email(email):
+        print("  !! รูปแบบอีเมลไม่ถูกต้อง !!")
+        return
+    
     # ── Preview ก่อน Confirm ───────────────────────────────────────────────
     print("\n  " + "="*46)
     print("     *** ยืนยันการเพิ่มลูกค้า ***")
@@ -737,6 +868,40 @@ def _cust_search_name(mgr: CustomerManager):
     _cust_table_header()
     for c in results: _cust_table_row(c)
 
+def validate_phone(phone: str) -> bool:
+    phone = phone.strip()
+    return (
+        phone.isdigit()
+        and 9 <= len(phone) <= 15
+    )
+
+def validate_email(email: str) -> bool:
+    email = email.strip()
+    if email == '':
+        return True
+    if ' ' in email:
+        return False
+    if '@' not in email:
+        return False
+    local, domain = email.split('@', 1)
+    if not local or not domain:
+        return False
+    if '.' not in domain:
+        return False
+    return True
+
+def validate_date_range(start_date: int, end_date: int) -> bool:
+    try:
+        start_obj = datetime.datetime.strptime(
+            str(start_date).zfill(8), '%d%m%Y'
+        )
+        end_obj = datetime.datetime.strptime(
+            str(end_date).zfill(8), '%d%m%Y'
+        )
+        return start_obj <= end_obj
+    except ValueError:
+        return False
+
 # ==============================================================================
 # 7. Rental Menu
 # ==============================================================================
@@ -750,13 +915,17 @@ def run_rental_menu(rental_mgr: RentalManager, car_mgr: CarManager, cust_mgr: Cu
         print("  V: ดูสัญญา Active ทั้งหมด")
         print("  S: ค้นหาสัญญาด้วย ID")
         print("  D: คืนรถ (ปิดสัญญา / Soft Delete)")
+        print("  H: ดูประวัติการเช่าของลูกค้า")
         print("  X: กลับเมนูหลัก")
-        ch = get_user_choice(">> กรุณาเลือก: ", ['A','V','S','D','X'])
+        ch = get_user_choice(">> กรุณาเลือก: ", ['A','V','S','D','H','X'])
 
         if   ch == 'A': _rental_create(rental_mgr, car_mgr, cust_mgr)
         elif ch == 'V': _rental_view_all(rental_mgr)
         elif ch == 'S': _rental_search(rental_mgr)
-        elif ch == 'D': _rental_close(rental_mgr, car_mgr)
+        elif ch == 'D': _rental_close(rental_mgr, car_mgr, cust_mgr)
+        elif ch == 'H':
+                    customer_id = get_int_input("ID ลูกค้า: ")
+                    show_customer_rental_history(rental_mgr, customer_id)
         elif ch == 'X': break
 
 def _rental_view_all(mgr: RentalManager):
@@ -764,7 +933,7 @@ def _rental_view_all(mgr: RentalManager):
     rentals = mgr.get_active_records()
     if not rentals:
         print("  ไม่มีสัญญาเช่าที่ใช้งานอยู่"); return
-    h = f"  {'ID':<7} {'ลูกค้า ID':<10} {'รถ ID':<7} {'วันเริ่ม':<12} {'วันสิ้นสุด':<12} {'ราคารวม (THB)':>15}"
+    h = f"  {'ID':<7} {'ลูกค้า ID':<12} {'รถ ID':<7} {'วันเริ่ม':<15} {'วันสิ้นสุด':<16} {'ราคารวม (THB)':>15}"
     sep = "  " + "-"*67
     print(sep); print(h); print(sep)
     for r in rentals:
@@ -829,14 +998,27 @@ def _rental_create(rental_mgr: RentalManager, car_mgr: CarManager, cust_mgr: Cus
     end_int   = get_date_input("วันที่สิ้นสุด  (DDMMYYYY): ")
 
     try:
-        start_obj = datetime.datetime.strptime(str(start_int).zfill(8), '%d%m%Y')
-        end_obj   = datetime.datetime.strptime(str(end_int).zfill(8),   '%d%m%Y')
+        start_obj = datetime.datetime.strptime(
+            str(start_int).zfill(8), '%d%m%Y'
+        )
+        end_obj = datetime.datetime.strptime(
+            str(end_int).zfill(8), '%d%m%Y'
+        )
         if start_obj > end_obj:
-            print("  // วันเริ่มต้องไม่เกินวันสิ้นสุด \\"); return
-        days        = (end_obj - start_obj).days + 1
+            print("  // วันเริ่มต้องไม่เกินวันสิ้นสุด \\")
+            return
+        if not is_car_available_for_period(
+            rental_mgr, car_id, start_int, end_int
+        ):
+            print(
+                f"  // รถ ID {car_id} มีการจอง/เช่าซ้อนในช่วงวันที่เลือก \\"
+            )
+            return
+        days = (end_obj - start_obj).days + 1
         gross_total = car_data['DailyRate'] * days
     except ValueError:
-        print("  // ข้อผิดพลาดในการคำนวณวันที่ \\"); return
+        print("  // ข้อผิดพลาดในการคำนวณวันที่ \\")
+        return
 
     # ── Tier discount ─────────────────────────────────────────────────────────
     tier          = get_customer_tier(cust_id, rental_mgr)
@@ -889,7 +1071,7 @@ def _rental_create(rental_mgr: RentalManager, car_mgr: CarManager, cust_mgr: Cus
         print("  !! ยกเลิกการสร้างสัญญา !!")
         print("  !! ยกเลิกการสร้างสัญญา !!")
 
-def _rental_close(rental_mgr: RentalManager, car_mgr: CarManager):
+def _rental_close(rental_mgr: RentalManager, car_mgr: CarManager, cust_mgr: CustomerManager):
     print("\n  -- คืนรถ / ปิดสัญญา --")
     rid = get_int_input("ID สัญญาที่ต้องการปิด: ")
     result = rental_mgr.get_record_by_id(rid)
@@ -904,6 +1086,7 @@ def _rental_close(rental_mgr: RentalManager, car_mgr: CarManager):
         if rental_mgr.delete_record(rid):
             car_mgr.update_record(rent['CarID'], {'IsRented': False})
             print(f"  || ปิดสัญญา #{rid} และอัปเดตสถานะรถ ID {rent['CarID']} → 'ว่าง' เรียบร้อย ||")
+            cust_mgr.add_points(rent['CustomerID'], rent['TotalPrice'])
     else:
         print("  !! ยกเลิกการคืนรถ !!")
 
@@ -928,8 +1111,8 @@ def _box_top(title: str = '') -> str:
     return f"  ┌{'─' * (BIW + 2)}┐"
 
 def _box_row(text: str) -> str:
-    """แถวเนื้อหา Box — pad content ให้ความกว้าง BIW"""
-    return f"  │ {text:<{BIW}} │"
+    """แถวเนื้อหา Box — pad content ตาม display width"""
+    return f"  │ {_pad(text, BIW)} │"
 
 def _box_bot() -> str:
     """เส้นล่างสุดของ Box"""
@@ -938,6 +1121,31 @@ def _box_bot() -> str:
 # ==============================================================================
 # 9. Report Generator (Enhanced)
 # ==============================================================================
+
+def _char_width(ch: str) -> int:
+    """Display cells for one character (0 for Thai combining marks)."""
+    if _ud.category(ch) in ('Mn', 'Me', 'Cf'):   # non-spacing / combining
+        return 0
+    return 2 if _ud.east_asian_width(ch) in ('W', 'F') else 1
+
+def _dw(s: str) -> int:
+    """Total display width of string."""
+    return sum(_char_width(c) for c in str(s))
+
+def _pad(s: str, width: int, align: str = '<') -> str:
+    """Cell-aware pad — replaces f'{s:<N}' / f'{s:>N}'."""
+    s   = str(s)
+    gap = max(0, width - _dw(s))
+    return (s + ' ' * gap) if align == '<' else (' ' * gap + s)
+
+def _trunc(s: str, max_cells: int) -> str:
+    """Truncate to max_cells display cells — replaces s[:N] on Thai text."""
+    out, w = '', 0
+    for ch in s:
+        cw = _char_width(ch)
+        if w + cw > max_cells: break
+        out += ch; w += cw
+    return out
 
 def generate_detailed_summary_report(
     car_mgr:    CarManager,
@@ -1051,9 +1259,8 @@ def generate_detailed_summary_report(
     a(_section('SECTION 1 : FLEET STATUS'))
     a('')
 
-    # ตารางรถทั้งหมด
     car_cols = [
-        ('Status',       10), ('ID',    5), ('Category', 10), ('Model',         30),
+        ('Status',       11), ('ID',    5), ('Category', 10), ('Model',         30),
         ('License Plate', 14), ('Rate THB/d', 11), ('Rented?', 8),
         ('Renter ID',    10), ('Rental Start', 12), ('Rental End', 12),
     ]
@@ -1071,7 +1278,7 @@ def generate_detailed_summary_report(
             status = '[DELETED]'
             rflag = renter = s_d = e_d = '-'
         elif car.get('IsRented'):
-            status = '[RENTED]'
+            status = '[RENTED]   '
             rflag  = 'Yes'
             rent   = rental_by_car.get(cid)
             if rent:
@@ -1085,10 +1292,10 @@ def generate_detailed_summary_report(
             rflag = renter = s_d = e_d = '-'
 
         row = ' | '.join([
-            f"{status:<10}", f"{cid:<5}", f"{car.get('Category',''):<10}",
-            f"{car['Model'][:28]:<30}", f"{car['LicensePlate']:<14}",
-            f"{car['DailyRate']:>11,.2f}", f"{rflag:<8}",
-            f"{renter:<10}", f"{s_d:<12}", f"{e_d:<12}",
+            _pad(status, 10),  _pad(cid, 5),  _pad(car.get('Category',''), 10),
+            _pad(_trunc(car['Model'], 28), 30),  _pad(car['LicensePlate'], 14),
+            _pad(f"{car['DailyRate']:,.2f}", 11, '>'),  _pad(rflag, 8),
+            _pad(renter, 10),  _pad(s_d, 12),  _pad(e_d, 12),
         ])
         a('  ' + row)
 
@@ -1107,10 +1314,10 @@ def generate_detailed_summary_report(
     a(_box_row(f"Minimum : {min_rate:>10,.2f}  |  Maximum : {max_rate:>10,.2f}  |  Average : {avg_rate:>10,.2f}"))
     a(_box_bot())
     a('')
-    a(_box_top('FLEET BY CATEGORY  (Bar = rental utilisation %)'))
+    a(_box_top('FLEET BY CATEGORY  (Bar = rental utilization %)'))
     if cat_data:
         for cat, v in sorted(cat_data.items()):
-            util_bar = ascii_bar(v['rented'], v['total'], 15)   # ← utilisation, not fleet size
+            util_bar = ascii_bar(v['rented'], v['total'], 15) 
             util_pct = v['rented'] / v['total'] * 100 if v['total'] else 0
             a(_box_row(
                 f"{cat:<12} {util_bar} {util_pct:>5.0f}%  "
@@ -1128,8 +1335,8 @@ def generate_detailed_summary_report(
     a('')
 
     cust_cols = [
-        ('Status',  9), ('ID',  5), ('Name',  32), ('Phone', 16),
-        ('Email',  30), ('Rentals', 8), ('Total Spent (THB)', 18),
+        ('Status',  9), ('ID',  5), ('Name',  31), ('Phone', 16),
+        ('Email',  31), ('Rentals', 8), ('Total Spent (THB)', 18),
     ]
     cust_hdr = ' | '.join(f"{n:<{w}}" for n, w in cust_cols)
     cust_sep = '-' * (sum(w for _, w in cust_cols) + (len(cust_cols) - 1) * 3)
@@ -1144,9 +1351,11 @@ def generate_detailed_summary_report(
         spent  = cust_spend.get(c['ID'], 0.0)
         cnt    = cust_cnt.get(c['ID'], 0)
         row = ' | '.join([
-            f"{status:<9}", f"{c['ID']:<5}", f"{c['Name'][:30]:<32}",
-            f"{c['Phone']:<16}", f"{c.get('Email','')[:28]:<30}",
-            f"{cnt:<8}", f"{spent:>18,.2f}",
+            _pad(status, 9),  _pad(c['ID'], 5),
+            _pad(_trunc(c['Name'], 30), 31),
+            _pad(c['Phone'], 16),
+            _pad(_trunc(c.get('Email',''), 30), 31),
+            _pad(cnt, 8),  _pad(f"{spent:,.2f}", 18, '>'),
         ])
         a('  ' + row)
 
@@ -1179,10 +1388,11 @@ def generate_detailed_summary_report(
         status    = '[ACTIVE] ' if r['IsActive'] else '[CLOSED] '
         cust_name = find_cust_name(r['CustomerID'])
         row = ' | '.join([
-            f"{status:<9}", f"#{r['ID']:<8}", f"{r['CustomerID']:<8}",
-            f"{r['CarID']:<7}", f"{format_date_display(r['StartDate']):<11}",
-            f"{format_date_display(r['EndDate']):<11}", f"{cust_name[:28]:<30}",
-            f"{r['TotalPrice']:>18,.2f}",
+            _pad(status, 9),  _pad(f"#{r['ID']}", 9),  _pad(r['CustomerID'], 8),
+            _pad(r['CarID'], 7),  _pad(format_date_display(r['StartDate']), 11),
+            _pad(format_date_display(r['EndDate']), 11),
+            _pad(_trunc(cust_name, 28), 30),
+            _pad(f"{r['TotalPrice']:,.2f}", 18, '>'),
         ])
         a('  ' + row)
 
@@ -1193,15 +1403,26 @@ def generate_detailed_summary_report(
     a(_box_bot())
     a('')
 
-    # Overdue alert
     if overdue:
-        a(_box_top(f'⚠  OVERDUE RENTALS  — {len(overdue)} contract(s) past End Date'))
+        a(_box_top(f'!!  OVERDUE RENTALS  — {len(overdue)} contract(s) past End Date'))
+
         for r in overdue:
             end_str = format_date_display(r['EndDate'])
-            cname   = find_cust_name(r['CustomerID'])
-            a(_box_row(f"Rental #{r['ID']:<5}  Car ID:{r['CarID']:<4}  Customer: {cname[:25]:<26}  Due: {end_str}"))
-        a(_box_bot())
-        a('')
+            cname = find_cust_name(r['CustomerID'])
+            prefix = (
+                f"Rental #{r['ID']:<5}  "
+                f"Car ID:{r['CarID']:<4}  "
+                f"Customer: "
+            )
+            suffix = f"   Due: {end_str}"
+            available = BIW - _dw(prefix) - _dw(suffix)
+            if _dw(cname) > available:
+                cname_display = _trunc(cname, max(0, available - 3)) + "..."
+            else:
+                cname_display = _pad(cname, available)
+            a(_box_row(prefix + cname_display + suffix))
+    a(_box_bot())
+    a('')
 
     # ══════════════════════════════════════════════════════════════════════════
     # SECTION 4 : FINANCIAL SUMMARY
@@ -1226,7 +1447,8 @@ def generate_detailed_summary_report(
         for rank, (cid, total) in enumerate(top3_custs, 1):
             name = find_cust_name(cid)
             cnt  = cust_cnt.get(cid, 0)
-            a(_box_row(f"#{rank}  ID:{cid:<4}  {name:<30}  {total:>12,.2f} THB  ({cnt} rental{'s' if cnt != 1 else ''})"))
+            a(_box_row(f"#{rank}  ID:{_pad(cid,4)}  {_pad(_trunc(name,30),30)}  "
+            f"{_pad(f'{total:,.2f} THB',16,'>')}  ({cnt} rental{'s' if cnt!=1 else ''})"))
     else:
         a(_box_row('No rental data available.'))
     a(_box_bot())
@@ -1240,7 +1462,8 @@ def generate_detailed_summary_report(
             model  = find_car_model(cid)
             cr     = car_mgr.get_record_by_id(cid)
             c_stat = ('Rented' if cr[0].get('IsRented') else 'Available') if cr else 'Deleted'
-            a(_box_row(f"#{rank}  ID:{cid:<4}  {model:<30}  {cnt:>3} rental{'s' if cnt != 1 else ''}  ({c_stat})"))
+            a(_box_row(f"#{rank}  ID:{_pad(cid,4)}  {_pad(_trunc(model,30),30)}  "
+            f"{_pad(cnt,3,'>')} rental{'s' if cnt!=1 else ''}  ({c_stat})"))
     else:
         a(_box_row('No rental data available.'))
     a(_box_bot())
