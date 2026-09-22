@@ -13,17 +13,20 @@ from typing import Dict, Any, Tuple, Optional, List, Union
 CAR_FORMAT      = '<?i30s10sf?15s'
 CAR_FORMAT_KEYS = ['IsActive', 'ID', 'Model', 'LicensePlate', 'DailyRate', 'IsRented', 'Category']
 CAR_FILE_NAME   = 'cars.bin'
+CAR_ENCODING    = 'utf-8'
 CAR_CATEGORIES  = ['Sedan', 'SUV', 'Pickup', 'Van', 'Hatchback', 'Sport', 'Other']
 
 # Customer: IsActive(1)+ID(4)+Name(50)+Phone(15)+Email(30) = 100 bytes
 CUSTOMER_FORMAT      = '<?i50s15s30sI'
 CUSTOMER_FORMAT_KEYS = ['IsActive', 'ID', 'Name', 'Phone', 'Email', 'Points']
 CUSTOMER_FILE_NAME   = 'customers.bin'
+CUSTOMER_ENCODING    = 'utf-8'
 
 # Rental: IsActive(1)+ID(4)+CustID(4)+CarID(4)+Start(4)+End(4)+Price(8) = 29 bytes  (unchanged)
 RENTAL_FORMAT      = '<?iiiiid'
 RENTAL_FORMAT_KEYS = ['IsActive', 'ID', 'CustomerID', 'CarID', 'StartDate', 'EndDate', 'TotalPrice']
 RENTAL_FILE_NAME   = 'rentals.bin'
+RENTAL_ENCODING    = 'utf-8'
 
 # Report layout constants
 W   = 160   # รายงาน: ความกว้างหลัก (ruler / section header)
@@ -178,7 +181,7 @@ class FileManager:
 
 class CarManager(FileManager):
     def __init__(self):
-        super().__init__(CAR_FORMAT, CAR_FORMAT_KEYS, CAR_FILE_NAME)
+        super().__init__(CAR_FORMAT, CAR_FORMAT_KEYS, CAR_FILE_NAME, CAR_ENCODING)
 
     def _pack_record(self, data: Dict[str, Any]) -> bytes:
         return struct.pack(
@@ -212,7 +215,8 @@ class CarManager(FileManager):
 
 class CustomerManager(FileManager):
     def __init__(self):
-        super().__init__(CUSTOMER_FORMAT, CUSTOMER_FORMAT_KEYS, CUSTOMER_FILE_NAME)
+        super().__init__(CUSTOMER_FORMAT, CUSTOMER_FORMAT_KEYS,
+                         CUSTOMER_FILE_NAME, CUSTOMER_ENCODING)
 
     def _pack_record(self, data: Dict[str, Any]) -> bytes:
         return struct.pack(
@@ -251,7 +255,7 @@ class CustomerManager(FileManager):
 
 class RentalManager(FileManager):
     def __init__(self):
-        super().__init__(RENTAL_FORMAT, RENTAL_FORMAT_KEYS, RENTAL_FILE_NAME)
+        super().__init__(RENTAL_FORMAT, RENTAL_FORMAT_KEYS, RENTAL_FILE_NAME, RENTAL_ENCODING)
 
     def _pack_record(self, data: Dict[str, Any]) -> bytes:
         return struct.pack(
@@ -430,6 +434,36 @@ def show_customer_rental_history(
             f"[{status}]"
         )
 
+def get_car_rental_history(
+    rental_mgr: RentalManager,
+    car_id: int
+) -> List[Dict[str, Any]]:
+    return [
+        rental
+        for rental in rental_mgr.get_all_records()
+        if rental['CarID'] == car_id
+    ]
+
+def show_car_rental_history(
+    rental_mgr: RentalManager,
+    car_id: int
+) -> None:
+    history = get_car_rental_history(rental_mgr, car_id)
+    if not history:
+        print(f"  // รถ ID {car_id} ไม่มีประวัติการเช่า \\")
+        return
+    print(f"\n  -- ประวัติการเช่าของรถ ID {car_id} --")
+    for rental in history:
+        status = "ACTIVE" if rental['IsActive'] else "CLOSED"
+        print(
+            f"  Rental #{rental['ID']:<5} "
+            f"Customer ID:{rental['CustomerID']:<4} "
+            f"{format_date_display(rental['StartDate'])} -> "
+            f"{format_date_display(rental['EndDate'])}  "
+            f"{rental['TotalPrice']:>10,.2f} THB  "
+            f"[{status}]"
+        )
+
 # ==============================================================================
 # 4b. Member Tier System  (Feature 1 — no binary format change)
 # ==============================================================================
@@ -487,8 +521,8 @@ def generate_rental_receipt(
 
     lines = [
         border,
-        "           CAR RENTAL MANAGEMENT SYSTEM",
-        "                 OFFICIAL RECEIPT",
+        "      CAR RENTAL MANAGEMENT SYSTEM",
+        "              OFFICIAL RECEIPT",
         border,
         f"  Receipt No.  : R{rental_data['ID']:04d}",
         f"  Issued At    : {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
@@ -856,6 +890,18 @@ def validate_email(email: str) -> bool:
         return False
     return True
 
+def validate_date_range(start_date: int, end_date: int) -> bool:
+    try:
+        start_obj = datetime.datetime.strptime(
+            str(start_date).zfill(8), '%d%m%Y'
+        )
+        end_obj = datetime.datetime.strptime(
+            str(end_date).zfill(8), '%d%m%Y'
+        )
+        return start_obj <= end_obj
+    except ValueError:
+        return False
+
 # ==============================================================================
 # 7. Rental Menu
 # ==============================================================================
@@ -1023,6 +1069,7 @@ def _rental_create(rental_mgr: RentalManager, car_mgr: CarManager, cust_mgr: Cus
         print(f"  !! ใบเสร็จถูกสร้างที่: {receipt_path} !!")
     else:
         print("  !! ยกเลิกการสร้างสัญญา !!")
+        print("  !! ยกเลิกการสร้างสัญญา !!")
 
 def _rental_close(rental_mgr: RentalManager, car_mgr: CarManager, cust_mgr: CustomerManager):
     print("\n  -- คืนรถ / ปิดสัญญา --")
@@ -1070,17 +1117,6 @@ def _box_row(text: str) -> str:
 def _box_bot() -> str:
     """เส้นล่างสุดของ Box"""
     return f"  └{'─' * (BIW + 2)}┘"
-
-def _table_block(a, title: str, cols: List[Tuple[str, int]]) -> str:
-    """พิมพ์ ruler + title + header ของตาราง แล้วคืนเส้นคั่น (ไว้พิมพ์ปิดท้าย)"""
-    hdr = ' | '.join(f"{n:<{w}}" for n, w in cols)
-    sep = '-' * (sum(w for _, w in cols) + (len(cols) - 1) * 3)
-    a(_ruler('-'))
-    a(f'  {title}')
-    a(_ruler('-'))
-    a('  ' + hdr)
-    a('  ' + sep)
-    return sep
 
 # ==============================================================================
 # 9. Report Generator (Enhanced)
@@ -1228,7 +1264,13 @@ def generate_detailed_summary_report(
         ('License Plate', 14), ('Rate THB/d', 11), ('Rented?', 8),
         ('Renter ID',    10), ('Rental Start', 12), ('Rental End', 12),
     ]
-    car_sep = _table_block(a, 'ALL CAR RECORDS', car_cols)
+    car_hdr = ' | '.join(f"{n:<{w}}" for n, w in car_cols)
+    car_sep = '-' * (sum(w for _, w in car_cols) + (len(car_cols) - 1) * 3)
+    a(_ruler('-'))
+    a('  ALL CAR RECORDS')
+    a(_ruler('-'))
+    a('  ' + car_hdr)
+    a('  ' + car_sep)
 
     for car in all_cars:
         cid = car['ID']
@@ -1296,7 +1338,13 @@ def generate_detailed_summary_report(
         ('Status',  9), ('ID',  5), ('Name',  31), ('Phone', 16),
         ('Email',  31), ('Rentals', 8), ('Total Spent (THB)', 18),
     ]
-    cust_sep = _table_block(a, 'ALL CUSTOMER RECORDS', cust_cols)
+    cust_hdr = ' | '.join(f"{n:<{w}}" for n, w in cust_cols)
+    cust_sep = '-' * (sum(w for _, w in cust_cols) + (len(cust_cols) - 1) * 3)
+    a(_ruler('-'))
+    a('  ALL CUSTOMER RECORDS')
+    a(_ruler('-'))
+    a('  ' + cust_hdr)
+    a('  ' + cust_sep)
 
     for c in all_custs:
         status = '[ACTIVE] ' if c['IsActive'] else '[DELETED]'
@@ -1328,7 +1376,13 @@ def generate_detailed_summary_report(
         ('Status',  9), ('Rental ID', 9), ('Cust ID', 8), ('Car ID', 7),
         ('Start Date', 11), ('End Date', 11), ('Customer Name', 30), ('Total Price (THB)', 18),
     ]
-    rent_sep = _table_block(a, 'ALL RENTAL RECORDS', rent_cols)
+    rent_hdr = ' | '.join(f"{n:<{w}}" for n, w in rent_cols)
+    rent_sep = '-' * (sum(w for _, w in rent_cols) + (len(rent_cols) - 1) * 3)
+    a(_ruler('-'))
+    a('  ALL RENTAL RECORDS')
+    a(_ruler('-'))
+    a('  ' + rent_hdr)
+    a('  ' + rent_sep)
 
     for r in all_rentals:
         status    = '[ACTIVE] ' if r['IsActive'] else '[CLOSED] '
@@ -1377,8 +1431,8 @@ def generate_detailed_summary_report(
     a('')
 
     a(_box_top('REVENUE OVERVIEW'))
-    a(_box_row(f"Total Revenue (All Time)          : {all_rev:>14,.2f} THB"))
-    a(_box_row(f"Revenue from Active (Open) Rentals: {act_rev:>14,.2f} THB"))
+    a(_box_row(f"Total Revenue  (All Time)          : {all_rev:>14,.2f} THB"))
+    a(_box_row(f"Revenue from Active  (Open) Rentals: {act_rev:>14,.2f} THB"))
     a(_box_row(f"Revenue from Closed (Returned)     : {cls_rev:>14,.2f} THB"))
     a(_box_row(f"Average Revenue per Rental         : {avg_rev:>14,.2f} THB"))
     if max_rent:
