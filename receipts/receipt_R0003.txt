@@ -1,9 +1,9 @@
 ════════════════════════════════════════════════════
-      CAR RENTAL MANAGEMENT SYSTEM
-              OFFICIAL RECEIPT
+           CAR RENTAL MANAGEMENT SYSTEM
+                 OFFICIAL RECEIPT
 ════════════════════════════════════════════════════
   Receipt No.  : R0003
-  Issued At    : 2026-09-22 23:54:18
+  Issued At    : 2026-10-05 09:50:16
   Storage      : Binary (.bin) | struct | Little-Endian
 ────────────────────────────────────────────────────
   CUSTOMER
@@ -14,22 +14,22 @@
     Tier   : ★☆☆ BRONZE  —  0% discount
 ────────────────────────────────────────────────────
   VEHICLE
-    ID       : 5
-    Model    : Porsche Panamera 4S
-    Plate    : 3133
+    ID       : 4
+    Model    : Honda Accord RS G11
+    Plate    : 53424
     Category : Sedan
-    Rate     :   2,300.00 THB/day
+    Rate     :   1,400.00 THB/day
 ────────────────────────────────────────────────────
   RENTAL PERIOD
-    From  : 01-01-2026
-    To    : 15-01-2026
-    Days  : 15
+    From  : 17-02-2026
+    To    : 17-03-2026
+    Days  : 29
 ────────────────────────────────────────────────────
   CHARGES
-    Gross Total  :  34,500.00 THB
+    Gross Total  :  40,600.00 THB
     Discount     :    0%   -     0.00 THB
     ────────────────────────────────────────
-    AMOUNT DUE   :  34,500.00 THB
+    AMOUNT DUE   :  40,600.00 THB
 ════════════════════════════════════════════════════
     Thank you for your rental najaaa :)    
 ════════════════════════════════════════════════════

@@ -6,7 +6,7 @@ import unicodedata as _ud
 from typing import Dict, Any, Tuple, Optional, List, Union
 
 # ==============================================================================
-# 1. Constants สำหรับ 3 Entities
+# 1. Constants
 # ==============================================================================
 
 # Car: IsActive(1)+ID(4)+Model(30)+Plate(10)+Rate(4)+IsRented(1)+Category(15) = 65 bytes
@@ -20,14 +20,14 @@ CUSTOMER_FORMAT      = '<?i50s15s30sI'
 CUSTOMER_FORMAT_KEYS = ['IsActive', 'ID', 'Name', 'Phone', 'Email', 'Points']
 CUSTOMER_FILE_NAME   = 'customers.bin'
 
-# Rental: IsActive(1)+ID(4)+CustID(4)+CarID(4)+Start(4)+End(4)+Price(8) = 29 bytes  (unchanged)
+# Rental: IsActive(1)+ID(4)+CustID(4)+CarID(4)+Start(4)+End(4)+Price(8) = 29 bytes
 RENTAL_FORMAT      = '<?iiiiid'
 RENTAL_FORMAT_KEYS = ['IsActive', 'ID', 'CustomerID', 'CarID', 'StartDate', 'EndDate', 'TotalPrice']
 RENTAL_FILE_NAME   = 'rentals.bin'
 
-# Report layout constants
-W   = 160   # รายงาน: ความกว้างหลัก (ruler / section header)
-BIW = 76    # รายงาน: ความกว้างภายใน Box (box inner width)
+# Report layout
+W   = 160   # รายงาน: ความกว้างหลัก
+BIW = 76    # รายงาน: ความกว้างภายใน Box (ตอนจัดตาราง)
 #             Box total width = BIW + 6 = 82 chars
 
 # ==============================================================================
@@ -173,7 +173,7 @@ class FileManager:
                 if kw in str(r.get(field_name, '')).lower()]
 
 # ==============================================================================
-# 3. Concrete Managers
+# 3. Managers
 # ==============================================================================
 
 class CarManager(FileManager):
@@ -278,7 +278,7 @@ class RentalManager(FileManager):
         }
 
 # ==============================================================================
-# 4. Utility Functions
+# 4. Utility
 # ==============================================================================
 
 def get_user_choice(prompt: str, valid_choices: List[str]) -> str:
@@ -395,6 +395,30 @@ def is_car_available_for_period(
         if requested_start <= existing_end and requested_end >= existing_start:
             return False
     return True
+
+def get_car_bookings(rental_mgr: RentalManager, car_id: int) -> List[Dict[str, Any]]:
+    """สัญญาที่ยังเปิดอยู่ (Active) ของรถคันนี้ เรียงตามวันเริ่ม"""
+    bookings = [r for r in rental_mgr.get_active_records() if r['CarID'] == car_id]
+    return sorted(bookings, key=lambda r: datetime.datetime.strptime(
+        str(r['StartDate']).zfill(8), '%d%m%Y'))
+
+def car_has_current_rental(rental_mgr: RentalManager, car_id: int) -> bool:
+    """รถถูกเช่าอยู่ตอนนี้ไหม — มีสัญญา Active ที่เริ่มแล้ว (วันเริ่ม <= วันนี้)"""
+    today = datetime.datetime.now()
+    for r in get_car_bookings(rental_mgr, car_id):
+        start = datetime.datetime.strptime(str(r['StartDate']).zfill(8), '%d%m%Y')
+        if start <= today:
+            return True
+    return False
+
+def sync_car_status(car_mgr: CarManager, rental_mgr: RentalManager) -> None:
+    """ปรับ IsRented ของรถทุกคันให้ตรงกับสัญญา — การจองล่วงหน้าที่ถึงวันเริ่มแล้วจะกลายเป็น 'ถูกเช่า'"""
+    for car in car_mgr.get_active_records():
+        should_be = car_has_current_rental(rental_mgr, car['ID'])
+        if bool(car.get('IsRented')) != should_be:
+            car_mgr.update_record(car['ID'], {'IsRented': should_be})
+            new_status = 'ถูกเช่า' if should_be else 'ว่าง'
+            print(f"  [Sync] รถ ID {car['ID']} → '{new_status}'")
 
 def get_customer_rental_history(
     rental_mgr: RentalManager,
@@ -532,7 +556,7 @@ def generate_rental_receipt(
 # 5. Car Menu
 # ==============================================================================
 
-def run_car_menu(car_mgr: CarManager):
+def run_car_menu(car_mgr: CarManager, rental_mgr: RentalManager):
     while True:
         print("\n" + "="*52)
         print("          [1] จัดการข้อมูลรถยนต์")
@@ -545,7 +569,7 @@ def run_car_menu(car_mgr: CarManager):
 
         if   ch == 'A': _car_add(car_mgr)
         elif ch == 'U': _car_update(car_mgr)
-        elif ch == 'D': _car_delete(car_mgr)
+        elif ch == 'D': _car_delete(car_mgr, rental_mgr)
         elif ch == 'V': _car_view_all(car_mgr)
         elif ch == 'S': _car_search_id(car_mgr)
         elif ch == 'F': _car_search_model(car_mgr)
@@ -622,7 +646,7 @@ def _car_update(mgr: CarManager):
     else:
         print("  !! ไม่มีการเปลี่ยนแปลง !!")
 
-def _car_delete(mgr: CarManager):
+def _car_delete(mgr: CarManager, rental_mgr: RentalManager):
     print("\n  -- ลบรถยนต์ (Soft Delete) --")
     car_id = get_int_input("ID รถที่ต้องการลบ: ")
     result = mgr.get_record_by_id(car_id)
@@ -633,6 +657,14 @@ def _car_delete(mgr: CarManager):
     # ตรวจสอบว่ารถถูกเช่าอยู่หรือไม่ก่อนลบ
     if car.get('IsRented'):
         print(f"  // ไม่สามารถลบได้ รถ ID {car_id} ({car['Model']}) กำลังถูกเช่าอยู่ \\"); return
+
+    # ตรวจสอบการจองล่วงหน้า — รถที่ยังมีสัญญาเปิดอยู่ ลบไม่ได้
+    bookings = get_car_bookings(rental_mgr, car_id)
+    if bookings:
+        ids = ', '.join(f"#{r['ID']}" for r in bookings)
+        print(f"  // ไม่สามารถลบได้ รถ ID {car_id} มีการจองที่ยังเปิดอยู่: {ids} \\")
+        print(f"  // กรุณาปิดสัญญาเหล่านั้นก่อน (เมนู [3] → D) \\")
+        return
 
     print(f"\n  รถที่จะลบ → ID {car_id} | {car['Model']} | {car['LicensePlate']} | {car.get('Category','')}")
     if get_user_confirmation("ยืนยันลบรถคันนี้?"):
@@ -914,17 +946,18 @@ def _rental_search(mgr: RentalManager):
 def _rental_create(rental_mgr: RentalManager, car_mgr: CarManager, cust_mgr: CustomerManager):
     print("\n  -- สร้างสัญญาเช่าใหม่ --")
 
-    # [ใหม่] แสดงรายการรถว่างก่อนเสมอ
-    avail = car_mgr.get_available_cars()
-    if not avail:
-        print("  // ไม่มีรถว่างในขณะนี้ \\"); return
+    # แสดงรถทั้งหมด (Active) พร้อมสถานะ — รถที่ถูกเช่าอยู่ยังจองล่วงหน้าได้
+    cars = car_mgr.get_active_records()
+    if not cars:
+        print("  // ไม่มีรถในระบบ \\"); return
 
-    print(f"\n  รถว่างในระบบ ({len(avail)} คัน):")
-    print(f"  {'ID':<5} {'รุ่น':<30} {'ทะเบียน':<12} {'ประเภท':<12} {'THB/วัน':>10}")
-    print("  " + "-"*73)
-    for car in avail:
+    print(f"\n  รถในระบบ ({len(cars)} คัน):")
+    print(f"  {'ID':<5} {'รุ่น':<30} {'ทะเบียน':<12} {'ประเภท':<12} {'THB/วัน':>10}  {'สถานะ':<10}")
+    print("  " + "-"*85)
+    for car in cars:
+        status = "ถูกเช่า" if car.get('IsRented') else "ว่าง"
         print(f"  {car['ID']:<5} {car['Model'][:28]:<30} {car['LicensePlate']:<12} "
-              f"{car.get('Category',''):<12} {car['DailyRate']:>10,.2f}")
+              f"{car.get('Category',''):<12} {car['DailyRate']:>10,.2f}  {status:<10}")
 
     # Auto-ID สัญญา
     rental_id = _auto_or_manual_id(rental_mgr, "สัญญา")
@@ -944,8 +977,17 @@ def _rental_create(rental_mgr: RentalManager, car_mgr: CarManager, cust_mgr: Cus
     if not car_result:
         print("  // ID รถยนต์ไม่ถูกต้อง หรือถูกลบไปแล้ว \\"); return
     car_data, _ = car_result
+
+    # แสดงช่วงวันที่ถูกจองไว้แล้ว เพื่อให้เลือกวันที่ไม่ทับซ้อน
+    bookings = get_car_bookings(rental_mgr, car_id)
     if car_data.get('IsRented'):
-        print(f"  // รถ ID {car_id} ถูกเช่าอยู่แล้ว \\"); return
+        print(f"  !! คำเตือน: ตอนนี้รถ ID {car_id} กำลังถูกเช่าอยู่ !!")
+        print("  !! แต่ยังจองล่วงหน้าได้ ถ้าช่วงวันที่ไม่ทับซ้อนกับการจองเดิม !!")
+    if bookings:
+        print(f"  ช่วงวันที่ที่รถ ID {car_id} ถูกจองแล้ว:")
+        for r in bookings:
+            print(f"    สัญญา #{r['ID']:<5} {format_date_display(r['StartDate'])} -> "
+                  f"{format_date_display(r['EndDate'])}")
 
     # วันที่
     start_int = get_date_input("วันที่เริ่มเช่า (DDMMYYYY): ")
@@ -1006,8 +1048,13 @@ def _rental_create(rental_mgr: RentalManager, car_mgr: CarManager, cust_mgr: Cus
             'StartDate': start_int, 'EndDate': end_int, 'TotalPrice': final_total,
         }
         rental_mgr.add_record(rental_record)
-        car_mgr.update_record(car_id, {'IsRented': True})
-        print(f"  || สร้างสัญญา #{rental_id} และอัปเดตสถานะรถ ID {car_id} → 'ถูกเช่า' เรียบร้อย ||")
+        # ตั้งสถานะ 'ถูกเช่า' เฉพาะเมื่อสัญญาเริ่มแล้ว — ถ้าเป็นการจองล่วงหน้า สถานะรถไม่เปลี่ยน
+        if start_obj <= datetime.datetime.now():
+            car_mgr.update_record(car_id, {'IsRented': True})
+            print(f"  || สร้างสัญญา #{rental_id} และอัปเดตสถานะรถ ID {car_id} → 'ถูกเช่า' เรียบร้อย ||")
+        else:
+            print(f"  || จองล่วงหน้า #{rental_id} เรียบร้อย "
+                  f"(เริ่ม {format_date_display(start_int)}) ||")
 
         # ── Auto receipt ──────────────────────────────────────────────────────
         receipt_path = generate_rental_receipt(
@@ -1037,8 +1084,11 @@ def _rental_close(rental_mgr: RentalManager, car_mgr: CarManager, cust_mgr: Cust
 
     if get_user_confirmation("ยืนยันคืนรถและปิดสัญญา?"):
         if rental_mgr.delete_record(rid):
-            car_mgr.update_record(rent['CarID'], {'IsRented': False})
-            print(f"  || ปิดสัญญา #{rid} และอัปเดตสถานะรถ ID {rent['CarID']} → 'ว่าง' เรียบร้อย ||")
+            # รถอาจมีสัญญาอื่นที่เริ่มแล้วค้างอยู่ — คำนวณสถานะใหม่แทนการตั้ง False ตรง ๆ
+            still_rented = car_has_current_rental(rental_mgr, rent['CarID'])
+            car_mgr.update_record(rent['CarID'], {'IsRented': still_rented})
+            new_status = 'ถูกเช่า' if still_rented else 'ว่าง'
+            print(f"  || ปิดสัญญา #{rid} และอัปเดตสถานะรถ ID {rent['CarID']} → '{new_status}' เรียบร้อย ||")
             cust_mgr.add_points(rent['CustomerID'], rent['TotalPrice'])
     else:
         print("  !! ยกเลิกการคืนรถ !!")
@@ -1118,9 +1168,9 @@ def generate_detailed_summary_report(
     report_filename: str = 'detailed_summary_report.txt'
 ):
     # ── รวบรวมข้อมูลทั้งหมด ──────────────────────────────────────────────────
-    all_cars    = car_mgr.get_all_records()
-    all_custs   = cust_mgr.get_all_records()
-    all_rentals = rental_mgr.get_all_records()
+    all_cars    = car_mgr.get_all_records() # cars.bin
+    all_custs   = cust_mgr.get_all_records() # customers.bin
+    all_rentals = rental_mgr.get_all_records() # rentals.bin
 
     active_cars    = [c for c in all_cars    if c['IsActive']]
     active_custs   = [c for c in all_custs   if c['IsActive']]
@@ -1130,7 +1180,16 @@ def generate_detailed_summary_report(
     avail_cars  = [c for c in active_cars if not c.get('IsRented')]
     rented_cars = [c for c in active_cars if     c.get('IsRented')]
 
-    rental_by_car: Dict[int, Dict] = {r['CarID']: r for r in active_rentals}
+    # สัญญาปัจจุบันของรถแต่ละคัน (เริ่มแล้ว) — ไม่เอาการจองล่วงหน้ามาแสดงเป็นผู้เช่า
+    now = datetime.datetime.now()
+    rental_by_car: Dict[int, Dict] = {}
+    for r in active_rentals:
+        try:
+            start = datetime.datetime.strptime(str(r['StartDate']).zfill(8), '%d%m%Y')
+        except ValueError:
+            continue
+        if start <= now:
+            rental_by_car[r['CarID']] = r
 
     # ── สถิติการเงิน ──────────────────────────────────────────────────────────
     all_rev  = sum(r['TotalPrice'] for r in all_rentals)
@@ -1443,6 +1502,7 @@ def main():
     car_mgr    = CarManager()
     cust_mgr   = CustomerManager()
     rental_mgr = RentalManager()
+    sync_car_status(car_mgr, rental_mgr)
 
     try:
         while True:
@@ -1457,7 +1517,7 @@ def main():
 
             ch = get_user_choice(">> กรุณาเลือกเมนู: ", ['1', '2', '3', 'R', 'X'])
 
-            if   ch == '1': run_car_menu(car_mgr)
+            if   ch == '1': run_car_menu(car_mgr, rental_mgr)
             elif ch == '2': run_customer_menu(cust_mgr, rental_mgr)
             elif ch == '3': run_rental_menu(rental_mgr, car_mgr, cust_mgr)
             elif ch == 'R':

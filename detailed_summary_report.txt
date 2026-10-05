@@ -4,7 +4,7 @@
                  Detailed Summary Report
 
 ================================================================================================================================================================
-  Generated At : 2026-09-22 23:54:31   Time Zone   : +07:00 (Indochina Time)
+  Generated At : 2026-10-05 10:01:49   Time Zone   : +07:00 (Indochina Time)
   Encoding     : UTF-8 (Fixed-Length Binary)    Endianness  : Little-Endian
   Record Sizes : Car=65B | Customer=104B | Rental=29B
 ================================================================================================================================================================
@@ -16,29 +16,28 @@
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
   Status      | ID    | Category   | Model                          | License Plate  | Rate THB/d  | Rented?  | Renter ID  | Rental Start | Rental End  
   ------------------------------------------------------------------------------------------------------------------------------------------------------
-  [AVAILABLE] | 1     | Sedan      | BMW M5 CS                      | 111134         |    2,000.00 | -        | -          | -            | -           
-  [RENTED]    | 2     | Sport      | Porsche 911 GT3 RS             | 4425           |    4,000.00 | Yes      | 1          | 01-01-2026   | 30-01-2026  
-  [AVAILABLE] | 3     | Sport      | Mercedes-Benz C63 AMG          | 1134           |    2,400.00 | -        | -          | -            | -           
-  [AVAILABLE] | 4     | Sedan      | Honda Accord RS G11            | 53424          |    1,400.00 | -        | -          | -            | -           
-  [RENTED]    | 5     | Sedan      | Porsche Panamera 4S            | 3133           |    2,300.00 | Yes      | 3          | 01-01-2026   | 15-01-2026  
-  [AVAILABLE] | 6     | Hatchback  | Honda Civic Type R             | 3333           |    3,000.00 | -        | -          | -            | -           
-  [AVAILABLE] | 7     | Hatchback  | Toyota GR Yaris                | 2223           |    2,200.00 | -        | -          | -            | -           
-  [AVAILABLE] | 8     | Sedan      | Toyota Yaris Ativ              | 6888           |    1,300.00 | -        | -          | -            | -           
-  [AVAILABLE] | 9     | Pickup     | Ford Raptor V6                 | 13414          |    1,000.00 | -        | -          | -            | -           
-  [RENTED]    | 10    | Other      | Mitsubishi Strada G-Wagon 2.   | 8871           |      700.00 | Yes      | 1          | 01-02-2026   | 28-02-2026  
+  [AVAILABLE] | 1     | Sedan      | BMW M5 CS                      | 1143           |    2,000.00 | -        | -          | -            | -           
+  [RENTED]    | 2     | Sport      | Porsche 911 GT3 RS             | 1111           |    3,000.00 | Yes      | 1          | 01-01-2026   | 15-01-2026  
+  [AVAILABLE] | 3     | Sport      | Mercedes-Bnez C63 AMG          | 4425           |    2,400.00 | -        | -          | -            | -           
+  [RENTED]    | 4     | Sedan      | Honda Accord RS G11            | 53424          |    1,400.00 | Yes      | 3          | 17-02-2026   | 17-03-2026  
+  [AVAILABLE] | 5     | Sedan      | Porsche Panamera 4S            | 3133           |    2,300.00 | -        | -          | -            | -           
+  [AVAILABLE] | 6     | Hatchback  | Toyota GR Yaris                | 2223           |    2,200.00 | -        | -          | -            | -           
+  [AVAILABLE] | 7     | Sedan      | Toyota Yaris Ativ              | 6888           |    1,300.00 | -        | -          | -            | -           
+  [AVAILABLE] | 8     | Pickup     | Ford Raptor V6                 | 13414          |    1,000.00 | -        | -          | -            | -           
+  [RENTED]    | 9     | Other      | Mitsubishi Strada G-Wagon 4x   | 8871           |      700.00 | Yes      | 1          | 15-01-2026   | 31-01-2026  
   ------------------------------------------------------------------------------------------------------------------------------------------------------
 
   ┌─ CAR STATISTICS ─────────────────────────────────────────────────────────────┐
-  │ Total Records : 10     Active : 10     Deleted : 0                           │
-  │ Available     : 7      Rented : 3                                            │
+  │ Total Records : 9      Active : 9      Deleted : 0                           │
+  │ Available     : 6      Rented : 3                                            │
   └──────────────────────────────────────────────────────────────────────────────┘
 
   ┌─ RATE STATISTICS  (THB/day, Active Cars Only) ───────────────────────────────┐
-  │ Minimum :     700.00  |  Maximum :   4,000.00  |  Average :   2,030.00       │
+  │ Minimum :     700.00  |  Maximum :   3,000.00  |  Average :   1,811.11       │
   └──────────────────────────────────────────────────────────────────────────────┘
 
   ┌─ FLEET BY CATEGORY  (Bar = rental utilization %) ────────────────────────────┐
-  │ Hatchback    [               ]     0%  Total:2    Avail:2    Rented:0        │
+  │ Hatchback    [               ]     0%  Total:1    Avail:1    Rented:0        │
   │ Other        [|||||||||||||||]   100%  Total:1    Avail:0    Rented:1        │
   │ Pickup       [               ]     0%  Total:1    Avail:1    Rented:0        │
   │ Sedan        [||||           ]    25%  Total:4    Avail:3    Rented:1        │
@@ -52,11 +51,11 @@
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
   Status    | ID    | Name                            | Phone            | Email                           | Rentals  | Total Spent (THB) 
   ----------------------------------------------------------------------------------------------------------------------------------------
-  [ACTIVE]  | 1     | Beam                            | 0649935008       |                                 | 2        |         139,600.00
+  [ACTIVE]  | 1     | Beam                            | 0649935008       |                                 | 2        |          56,900.00
   [ACTIVE]  | 2     | Mew                             | 0911913075       |                                 | 0        |               0.00
-  [ACTIVE]  | 3     | Kaiwaan                         | 0992517711       |                                 | 1        |          34,500.00
+  [ACTIVE]  | 3     | Kaiwaan                         | 0992517711       |                                 | 1        |          40,600.00
   [ACTIVE]  | 4     | Ice                             | 0944499245       |                                 | 0        |               0.00
-  [ACTIVE]  | 5     | Bank                            | 495230249        |                                 | 0        |               0.00
+  [ACTIVE]  | 5     | Bank                            | 4092859935       |                                 | 0        |               0.00
   ----------------------------------------------------------------------------------------------------------------------------------------
 
   ┌─ CUSTOMER STATISTICS ────────────────────────────────────────────────────────┐
@@ -70,9 +69,9 @@
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
   Status    | Rental ID | Cust ID  | Car ID  | Start Date  | End Date    | Customer Name                  | Total Price (THB) 
   ----------------------------------------------------------------------------------------------------------------------------
-  [ACTIVE]  | #1        | 1        | 2       | 01-01-2026  | 30-01-2026  | Beam                           |         120,000.00
-  [ACTIVE]  | #2        | 1        | 10      | 01-02-2026  | 28-02-2026  | Beam                           |          19,600.00
-  [ACTIVE]  | #3        | 3        | 5       | 01-01-2026  | 15-01-2026  | Kaiwaan                        |          34,500.00
+  [ACTIVE]  | #1        | 1        | 2       | 01-01-2026  | 15-01-2026  | Beam                           |          45,000.00
+  [ACTIVE]  | #2        | 1        | 9       | 15-01-2026  | 31-01-2026  | Beam                           |          11,900.00
+  [ACTIVE]  | #3        | 3        | 4       | 17-02-2026  | 17-03-2026  | Kaiwaan                        |          40,600.00
   ----------------------------------------------------------------------------------------------------------------------------
 
   ┌─ RENTAL STATISTICS ──────────────────────────────────────────────────────────┐
@@ -80,33 +79,33 @@
   └──────────────────────────────────────────────────────────────────────────────┘
 
   ┌─ !!  OVERDUE RENTALS  — 3 contract(s) past End Date ─────────────────────────┐
-  │ Rental #1      Car ID:2     Customer: Beam                   Due: 30-01-2026 │
-  │ Rental #2      Car ID:10    Customer: Beam                   Due: 28-02-2026 │
-  │ Rental #3      Car ID:5     Customer: Kaiwaan                Due: 15-01-2026 │
+  │ Rental #1      Car ID:2     Customer: Beam                   Due: 15-01-2026 │
+  │ Rental #2      Car ID:9     Customer: Beam                   Due: 31-01-2026 │
+  │ Rental #3      Car ID:4     Customer: Kaiwaan                Due: 17-03-2026 │
   └──────────────────────────────────────────────────────────────────────────────┘
 
 ===============================================================[ SECTION 4 : FINANCIAL SUMMARY ]================================================================
 
   ┌─ REVENUE OVERVIEW ───────────────────────────────────────────────────────────┐
-  │ Total Revenue  (All Time)          :     174,100.00 THB                      │
-  │ Revenue from Active  (Open) Rentals:     174,100.00 THB                      │
+  │ Total Revenue (All Time)          :      97,500.00 THB                       │
+  │ Revenue from Active (Open) Rentals:      97,500.00 THB                       │
   │ Revenue from Closed (Returned)     :           0.00 THB                      │
-  │ Average Revenue per Rental         :      58,033.33 THB                      │
-  │ Highest Single Rental              :     120,000.00 THB  (Rental #1)         │
+  │ Average Revenue per Rental         :      32,500.00 THB                      │
+  │ Highest Single Rental              :      45,000.00 THB  (Rental #1)         │
   └──────────────────────────────────────────────────────────────────────────────┘
 
   ┌─ TOP 3 CUSTOMERS BY TOTAL SPENDING ──────────────────────────────────────────┐
-  │ #1  ID:1     Beam                              139,600.00 THB  (2 rentals)   │
-  │ #2  ID:3     Kaiwaan                            34,500.00 THB  (1 rental)    │
+  │ #1  ID:1     Beam                               56,900.00 THB  (2 rentals)   │
+  │ #2  ID:3     Kaiwaan                            40,600.00 THB  (1 rental)    │
   └──────────────────────────────────────────────────────────────────────────────┘
 
   ┌─ TOP 3 MOST RENTED CARS ─────────────────────────────────────────────────────┐
   │ #1  ID:2     Porsche 911 GT3 RS                1 rental  (Rented)            │
-  │ #2  ID:10    Mitsubishi Strada G-Wagon 2.8     1 rental  (Rented)            │
-  │ #3  ID:5     Porsche Panamera 4S               1 rental  (Rented)            │
+  │ #2  ID:9     Mitsubishi Strada G-Wagon 4x4     1 rental  (Rented)            │
+  │ #3  ID:4     Honda Accord RS G11               1 rental  (Rented)            │
   └──────────────────────────────────────────────────────────────────────────────┘
 
 ================================================================================================================================================================
-  END OF REPORT  |  2026-09-22 23:54:31
-  Binary Files  :  Cars=10 rec × 65B   |  Customers=5 rec × 104B   |  Rentals=3 rec × 29B
+  END OF REPORT  |  2026-10-05 10:01:49
+  Binary Files  :  Cars=9 rec × 65B   |  Customers=5 rec × 104B   |  Rentals=3 rec × 29B
 ================================================================================================================================================================
