@@ -1,40 +1,44 @@
 ==================================================================================================================
   CAR RENTAL MANAGEMENT SYSTEM  —  Fleet Status & Overview
-  Generated : 2026-10-05 10:42:24
+  Generated : 2026-10-06 09:41:49
+  Data from : cars.bin, customers.bin, rentals.bin
 ==================================================================================================================
 
   OVERVIEW
   ════════
   ┌──────────────────────────────────────────────────────────────────────────────┐
-  │ Cars      : 9 active  (Available 6 / Rented 3)                               │
+  │ Cars      : 9 active  (Available 7 / Rented 2)                               │
   │ Customers : 5 active                                                         │
-  │ Rentals   : Renting 0 / Booked 0 / Overdue 3 / Closed 0                      │
-  │ Revenue   : 97,500.00 THB (All Time)                                         │
+  │ Rentals   : Renting 0 / Booked 0 / Overdue 3 / Closed 1                      │
+  │ Revenue   : 133,500.00 THB (All Time)                                        │
   └──────────────────────────────────────────────────────────────────────────────┘
+  รายละเอียดเพิ่มเติม: customer_report.txt, rental_report.txt, financial_report.txt
 
   FLEET STATUS
   ════════════
-  ┌──────────────────────────────────────────────────────────────────────────────┐
-  │ Cars  : 9 active  (Available 6 / Rented 3)  Deleted 0                        │
-  │ Rate  : Min 700.00 / Max 3,000.00 / Avg 1,811.11 THB/day                     │
-  └──────────────────────────────────────────────────────────────────────────────┘
 
   Status     ID    Category   Model                         Plate          THB/day  Renter  From        To        
   ────────────────────────────────────────────────────────────────────────────────────────────────────────────────
   AVAILABLE  1     Sedan      BMW M5 CS                     1143          2,000.00  -       -           -         
-  RENTED     2     Sport      Porsche 911 GT3 RS            1111          3,000.00  1       01-01-2026  15-01-2026
+  RENTED     2     Sport      Porsche 911 GT3 RS            1111          3,000.00  2       20-01-2026  31-01-2026
   AVAILABLE  3     Sport      Mercedes-Bnez C63 AMG         4425          2,400.00  -       -           -         
   RENTED     4     Sedan      Honda Accord RS G11           53424         1,400.00  3       17-02-2026  17-03-2026
   AVAILABLE  5     Sedan      Porsche Panamera 4S           3133          2,300.00  -       -           -         
   AVAILABLE  6     Hatchback  Toyota GR Yaris               2223          2,200.00  -       -           -         
   AVAILABLE  7     Sedan      Toyota Yaris Ativ             6888          1,300.00  -       -           -         
   AVAILABLE  8     Pickup     Ford Raptor V6                13414         1,000.00  -       -           -         
-  RENTED     9     Other      Mitsubishi Strada G-Wagon 4x  8871            700.00  1       15-01-2026  31-01-2026
+  AVAILABLE  9     Other      Mitsubishi Strada G-Wagon 4x  8871            700.00  -       -           -         
   ────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
+  ┌─ SUMMARY ────────────────────────────────────────────────────────────────────┐
+  │ Total cars      : 9  (Active 9 / Deleted 0)                                  │
+  │ Available       : 7    Rented : 2    Utilization : 22%                       │
+  │ Daily rate      : Min 700.00 / Max 3,000.00 / Avg 1,811.11 THB               │
+  │ Rented income   : 4,400.00 THB/day (from cars currently rented)              │
+  └──────────────────────────────────────────────────────────────────────────────┘
   Fleet by Category  (bar = % rented)
     Hatchback  [          ]    0%  (0/1 rented)
-    Other      [||||||||||]  100%  (1/1 rented)
+    Other      [          ]    0%  (0/1 rented)
     Pickup     [          ]    0%  (0/1 rented)
     Sedan      [||        ]   25%  (1/4 rented)
     Sport      [|||||     ]   50%  (1/2 rented)

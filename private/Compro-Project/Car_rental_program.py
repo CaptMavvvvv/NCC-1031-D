@@ -1169,6 +1169,14 @@ REPORT_FILES = {
 }
 FULL_REPORT_FILE = 'full_summary_report.txt'
 
+# ไฟล์ binary ที่แต่ละรายงานดึงข้อมูลมาแสดง (แสดงที่หัวไฟล์ .txt)
+REPORT_SOURCES = {
+    '1': [CAR_FILE_NAME, CUSTOMER_FILE_NAME, RENTAL_FILE_NAME],  # ตารางรถ + ผู้เช่าปัจจุบัน + Overview
+    '2': [CUSTOMER_FILE_NAME, RENTAL_FILE_NAME],                 # ลูกค้า + จำนวนครั้ง/ยอดเช่า
+    '3': [RENTAL_FILE_NAME, CUSTOMER_FILE_NAME],                 # สัญญา + ชื่อลูกค้า
+    '4': [RENTAL_FILE_NAME, CAR_FILE_NAME, CUSTOMER_FILE_NAME],  # รายได้ + ประเภท/รุ่นรถ + ชื่อลูกค้า
+}
+
 def _parse_date(date_int: int) -> Optional[datetime.datetime]:
     try:
         return datetime.datetime.strptime(str(date_int).zfill(8), '%d%m%Y')
@@ -1292,17 +1300,25 @@ def _build_overview(a, d: Dict[str, Any]):
     a(_box_bot())
     a('  รายละเอียดเพิ่มเติม: ' + ', '.join(REPORT_FILES[k][0] for k in ('2', '3', '4')))
 
+def _summary(a, rows: List[str], title: str = 'SUMMARY'):
+    """กล่องสรุปท้ายแต่ละ Section"""
+    a('')
+    a(_box_top(title))
+    for r in rows:
+        a(_box_row(r))
+    a(_box_bot())
+
+def _tier_from_count(n: int) -> str:
+    """ระดับสมาชิกจากจำนวนสัญญา — เกณฑ์เดียวกับ get_customer_tier"""
+    for tier, (threshold, _, _) in TIER_CONFIG.items():
+        if n >= threshold:
+            return tier
+    return 'BRONZE'
+
 # ── SECTION 1 : FLEET STATUS ──────────────────────────────────────────────────
 
 def _build_fleet_section(a, d: Dict[str, Any]):
     _heading(a, 'FLEET STATUS')
-    a(_box_top())
-    a(_box_row(f"Cars  : {len(d['active_cars'])} active  "
-               f"(Available {len(d['avail_cars'])} / Rented {len(d['rented_cars'])})  "
-               f"Deleted {len(d['all_cars']) - len(d['active_cars'])}"))
-    a(_box_row(f"Rate  : Min {d['min_rate']:,.2f} / Max {d['max_rate']:,.2f} / "
-               f"Avg {d['avg_rate']:,.2f} THB/day"))
-    a(_box_bot())
 
     rows = []
     for car in sorted(d['all_cars'], key=lambda c: not c['IsActive']):
@@ -1324,7 +1340,16 @@ def _build_fleet_section(a, d: Dict[str, Any]):
                ('Plate', 10), ('THB/day', 10, '>'), ('Renter', 6),
                ('From', 10), ('To', 10)], rows)
 
-    a('')
+    # ── สรุปท้ายไฟล์ ──
+    n_active, n_rented = len(d['active_cars']), len(d['rented_cars'])
+    util = n_rented / n_active * 100 if n_active else 0
+    rented_income = sum(c['DailyRate'] for c in d['rented_cars'])
+    _summary(a, [
+        f"Total cars      : {len(d['all_cars'])}  (Active {n_active} / Deleted {len(d['all_cars']) - n_active})",
+        f"Available       : {len(d['avail_cars'])}    Rented : {n_rented}    Utilization : {util:.0f}%",
+        f"Daily rate      : Min {d['min_rate']:,.2f} / Max {d['max_rate']:,.2f} / Avg {d['avg_rate']:,.2f} THB",
+        f"Rented income   : {rented_income:,.2f} THB/day (from cars currently rented)",
+    ])
     a('  Fleet by Category  (bar = % rented)')
     if d['cat_data']:
         for cat, v in sorted(d['cat_data'].items()):
@@ -1338,10 +1363,6 @@ def _build_fleet_section(a, d: Dict[str, Any]):
 
 def _build_customer_section(a, d: Dict[str, Any]):
     _heading(a, 'CUSTOMER DIRECTORY')
-    a(_box_top())
-    a(_box_row(f"Customers : {len(d['active_custs'])} active  "
-               f"Deleted {len(d['all_custs']) - len(d['active_custs'])}"))
-    a(_box_bot())
 
     rows = []
     for c in sorted(d['all_custs'], key=lambda c: not c['IsActive']):
@@ -1351,15 +1372,30 @@ def _build_customer_section(a, d: Dict[str, Any]):
     _table(a, [('Status', 7), ('ID', 4), ('Name', 28), ('Phone', 15),
                ('Email', 28), ('Rentals', 7, '>'), ('Spent THB', 12, '>')], rows)
 
+    # ── สรุปท้ายไฟล์ ──
+    active = d['active_custs']
+    renters = [c for c in active if d['cust_cnt'].get(c['ID'], 0) > 0]
+    total_spent = sum(d['cust_spend'].get(c['ID'], 0.0) for c in active)
+    avg_spent = total_spent / len(renters) if renters else 0.0
+    tiers = {t: 0 for t in TIER_CONFIG}
+    for c in active:
+        tiers[_tier_from_count(d['cust_cnt'].get(c['ID'], 0))] += 1
+    top = max(active, key=lambda c: d['cust_spend'].get(c['ID'], 0.0), default=None)
+    summary = [
+        f"Total customers : {len(d['all_custs'])}  (Active {len(active)} / Deleted {len(d['all_custs']) - len(active)})",
+        f"Have rented     : {len(renters)}    Never rented : {len(active) - len(renters)}",
+        f"Total spent     : {total_spent:,.2f} THB    Avg per renter : {avg_spent:,.2f} THB",
+        f"Member tiers    : Gold {tiers['GOLD']} / Silver {tiers['SILVER']} / Bronze {tiers['BRONZE']}",
+    ]
+    if top and d['cust_spend'].get(top['ID'], 0.0) > 0:
+        summary.append(f"Top spender     : {_trunc(top['Name'], 30)} ({d['cust_spend'][top['ID']]:,.2f} THB)")
+    _summary(a, summary)
+
 # ── SECTION 3 : RENTAL HISTORY ────────────────────────────────────────────────
 
 def _build_rental_section(a, d: Dict[str, Any]):
     sc = d['status_cnt']
     _heading(a, 'RENTAL HISTORY')
-    a(_box_top())
-    a(_box_row(f"Total {len(d['all_rentals'])}  =  Renting {sc['RENTING']} / "
-               f"Booked {sc['BOOKED']} / Overdue {sc['OVERDUE']} / Closed {sc['CLOSED']}"))
-    a(_box_bot())
     a('  RENTING = กำลังเช่า   BOOKED = จองล่วงหน้า   OVERDUE = เลยกำหนดคืน   CLOSED = คืนแล้ว')
 
     rows = []
@@ -1371,10 +1407,51 @@ def _build_rental_section(a, d: Dict[str, Any]):
     _table(a, [('Status', 7), ('Rental', 6), ('Car', 4), ('Customer', 26),
                ('From', 10), ('To', 10), ('Total THB', 12, '>')], rows)
 
+    # ── สรุปท้ายไฟล์ ──
+    days = []
+    for r in d['all_rentals']:
+        s, e = _parse_date(r['StartDate']), _parse_date(r['EndDate'])
+        if s and e:
+            days.append((e - s).days + 1)
+    avg_days = sum(days) / len(days) if days else 0
+    _summary(a, [
+        f"Total rentals   : {len(d['all_rentals'])}  (Open {len(d['active_rentals'])} / Closed {len(d['closed_rentals'])})",
+        f"By status       : Renting {sc['RENTING']} / Booked {sc['BOOKED']} / Overdue {sc['OVERDUE']} / Closed {sc['CLOSED']}",
+        f"Total value     : {d['all_rev']:,.2f} THB  (Open {d['act_rev']:,.2f} / Closed {d['cls_rev']:,.2f})",
+        f"Average length  : {avg_days:.1f} days per rental",
+    ])
+    overdue = [r for r in d['active_rentals'] if _rental_status(r, d['now']) == 'OVERDUE']
+    if overdue:
+        a('  !! Overdue !!')
+        for r in overdue:
+            a(f"    Rental #{r['ID']:<4} Car {r['CarID']:<4} {_trunc(_find_cust_name(d, r['CustomerID']), 26)}"
+              f"  (due {format_date_display(r['EndDate'])})")
+
 # ── SECTION 4 : FINANCIAL SUMMARY ─────────────────────────────────────────────
 
 def _build_financial_section(a, d: Dict[str, Any]):
     _heading(a, 'FINANCIAL SUMMARY')
+
+    # ── ตาราง: รายได้แยกตามประเภทรถ ──
+    cat_of: Dict[int, str] = {}
+    for c in d['all_cars']:   # รถที่ใช้งานอยู่มีสิทธิ์ก่อน ถ้า ID ซ้ำกับรถที่ถูกลบ
+        if c['IsActive'] or c['ID'] not in cat_of:
+            cat_of[c['ID']] = c.get('Category') or 'Other'
+    by_cat: Dict[str, List[float]] = {}
+    for r in d['all_rentals']:
+        cat = cat_of.get(r['CarID'], 'Unknown')
+        by_cat.setdefault(cat, []).append(r['TotalPrice'])
+    rows = []
+    for cat, prices in sorted(by_cat.items(), key=lambda x: sum(x[1]), reverse=True):
+        share = sum(prices) / d['all_rev'] * 100 if d['all_rev'] else 0
+        rows.append([cat, len(prices), f"{sum(prices):,.2f}", f"{share:.1f}%"])
+    if rows:
+        rows.append(['TOTAL', len(d['all_rentals']), f"{d['all_rev']:,.2f}", '100.0%'])
+    a('  Revenue by Car Category')
+    _table(a, [('Category', 12), ('Rentals', 7, '>'), ('Revenue THB', 14, '>'), ('Share', 7, '>')], rows)
+
+    # ── สรุปท้ายไฟล์ ──
+    a('')
     a(_box_top('REVENUE (THB)'))
     a(_box_row(f"All Time            : {d['all_rev']:>14,.2f}"))
     a(_box_row(f"  - Open rentals    : {d['act_rev']:>14,.2f}"))
@@ -1418,7 +1495,8 @@ SECTION_BUILDERS = {
 # ── เขียนไฟล์รายงาน ───────────────────────────────────────────────────────────
 
 def _write_report(d: Dict[str, Any], filename: str, title: str, sections: List[str],
-                  with_overview: bool = False, with_tech: bool = False) -> bool:
+                  with_overview: bool = False, with_tech: bool = False,
+                  sources: Optional[List[str]] = None) -> bool:
     body: List[str] = []
     a = body.append
     if with_overview:
@@ -1432,6 +1510,7 @@ def _write_report(d: Dict[str, Any], filename: str, title: str, sections: List[s
         '=' * width,
         f"  CAR RENTAL MANAGEMENT SYSTEM  —  {title}",
         f"  Generated : {d['now'].strftime('%Y-%m-%d %H:%M:%S')}",
+        f"  Data from : {', '.join(sources or [CAR_FILE_NAME, CUSTOMER_FILE_NAME, RENTAL_FILE_NAME])}",
         '=' * width,
     ] + body + ['', '=' * width]
     if with_tech:
@@ -1458,7 +1537,8 @@ def generate_section_report(car_mgr: CarManager, cust_mgr: CustomerManager,
         d = _collect_report_data(car_mgr, cust_mgr, rental_mgr)
     filename, title = REPORT_FILES[key]
     # ไฟล์ Section 1 เป็นไฟล์สรุปหลัก — ใส่ภาพรวมจาก Section อื่นไว้ด้วย
-    return _write_report(d, filename, title, [key], with_overview=(key == '1'))
+    return _write_report(d, filename, title, [key], with_overview=(key == '1'),
+                         sources=REPORT_SOURCES[key])
 
 def generate_full_report(car_mgr: CarManager, cust_mgr: CustomerManager,
                          rental_mgr: RentalManager,

@@ -1,0 +1,35 @@
+════════════════════════════════════════════════════
+           CAR RENTAL MANAGEMENT SYSTEM
+                 OFFICIAL RECEIPT
+════════════════════════════════════════════════════
+  Receipt No.  : R0005
+  Issued At    : 2026-10-06 09:43:07
+  Storage      : Binary (.bin) | struct | Little-Endian
+────────────────────────────────────────────────────
+  CUSTOMER
+    ID     : 4
+    Name   : Ice
+    Phone  : 0944499245
+    Email  : -
+    Tier   : ★☆☆ BRONZE  —  0% discount
+────────────────────────────────────────────────────
+  VEHICLE
+    ID       : 5
+    Model    : Porsche Panamera 4S
+    Plate    : 3133
+    Category : Sedan
+    Rate     :   2,300.00 THB/day
+────────────────────────────────────────────────────
+  RENTAL PERIOD
+    From  : 01-01-2026
+    To    : 15-01-2026
+    Days  : 15
+────────────────────────────────────────────────────
+  CHARGES
+    Gross Total  :  34,500.00 THB
+    Discount     :    0%   -     0.00 THB
+    ────────────────────────────────────────
+    AMOUNT DUE   :  34,500.00 THB
+════════════════════════════════════════════════════
+    Thank you for your rental najaaa :)    
+════════════════════════════════════════════════════
