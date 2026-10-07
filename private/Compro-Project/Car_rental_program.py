@@ -1190,7 +1190,7 @@ def _rental_status(r: Dict[str, Any], now: datetime.datetime) -> str:
     start, end = _parse_date(r['StartDate']), _parse_date(r['EndDate'])
     if start and start > now:
         return 'BOOKED'
-    if end and end < now:
+    if end and end.date() < now.date():   # วันสุดท้ายของสัญญายังไม่นับว่าเลยกำหนด
         return 'OVERDUE'
     return 'RENTING'
 
