@@ -1,6 +1,6 @@
 ==================================================================================
   CAR RENTAL MANAGEMENT SYSTEM  —  Financial Summary
-  Generated : 2026-10-06 09:41:49
+  Generated : 2026-10-07 09:32:14
   Data from : rentals.bin, cars.bin, customers.bin
 ==================================================================================
 
@@ -10,27 +10,28 @@
 
   Category      Rentals     Revenue THB    Share
   ──────────────────────────────────────────────
-  Sport               2       81,000.00    60.7%
-  Sedan               1       40,600.00    30.4%
-  Other               1       11,900.00     8.9%
-  TOTAL               4      133,500.00   100.0%
+  Sport               3      126,000.00    48.5%
+  Sedan               2       75,100.00    28.9%
+  Pickup              1       40,800.00    15.7%
+  SUV                 1       18,000.00     6.9%
+  TOTAL               7      259,900.00   100.0%
   ──────────────────────────────────────────────
 
   ┌─ REVENUE (THB) ──────────────────────────────────────────────────────────────┐
-  │ All Time            :     133,500.00                                         │
-  │   - Open rentals    :     121,600.00                                         │
-  │   - Closed rentals  :      11,900.00                                         │
-  │ Average per Rental  :      33,375.00                                         │
+  │ All Time            :     259,900.00                                         │
+  │   - Open rentals    :     259,900.00                                         │
+  │   - Closed rentals  :           0.00                                         │
+  │ Average per Rental  :      37,128.57                                         │
   │ Highest Rental      :      45,000.00  (Rental #1)                            │
   └──────────────────────────────────────────────────────────────────────────────┘
   ┌─ TOP 3 CUSTOMERS ────────────────────────────────────────────────────────────┐
-  │ 1. Beam                               56,900.00 THB  (2 rentals)             │
-  │ 2. Kaiwaan                            40,600.00 THB  (1 rental)              │
-  │ 3. Mew                                36,000.00 THB  (1 rental)              │
+  │ 1. Kaiwaan                            81,400.00 THB  (2 rentals)             │
+  │ 2. Ice                                52,500.00 THB  (2 rentals)             │
+  │ 3. Beam                               45,000.00 THB  (1 rental)              │
   └──────────────────────────────────────────────────────────────────────────────┘
   ┌─ TOP 3 MOST RENTED CARS ─────────────────────────────────────────────────────┐
-  │ 1. Porsche 911 GT3 RS                2 rentals  (Rented)                     │
-  │ 2. Mitsubishi Strada G-Wagon 4x4     1 rental  (Available)                   │
+  │ 1. Porsche 911 GT3 RS                3 rentals  (Rented)                     │
+  │ 2. Porsche Panamera 4S               1 rental  (Rented)                      │
   │ 3. Honda Accord RS G11               1 rental  (Rented)                      │
   └──────────────────────────────────────────────────────────────────────────────┘
 

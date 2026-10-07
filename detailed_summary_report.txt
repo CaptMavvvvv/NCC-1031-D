@@ -1,16 +1,16 @@
 ==================================================================================================================
   CAR RENTAL MANAGEMENT SYSTEM  —  Fleet Status & Overview
-  Generated : 2026-10-06 09:41:49
+  Generated : 2026-10-07 09:32:14
   Data from : cars.bin, customers.bin, rentals.bin
 ==================================================================================================================
 
   OVERVIEW
   ════════
   ┌──────────────────────────────────────────────────────────────────────────────┐
-  │ Cars      : 9 active  (Available 7 / Rented 2)                               │
+  │ Cars      : 11 active  (Available 6 / Rented 5)                              │
   │ Customers : 5 active                                                         │
-  │ Rentals   : Renting 0 / Booked 0 / Overdue 3 / Closed 1                      │
-  │ Revenue   : 133,500.00 THB (All Time)                                        │
+  │ Rentals   : Renting 1 / Booked 0 / Overdue 6 / Closed 0                      │
+  │ Revenue   : 259,900.00 THB (All Time)                                        │
   └──────────────────────────────────────────────────────────────────────────────┘
   รายละเอียดเพิ่มเติม: customer_report.txt, rental_report.txt, financial_report.txt
 
@@ -20,27 +20,30 @@
   Status     ID    Category   Model                         Plate          THB/day  Renter  From        To        
   ────────────────────────────────────────────────────────────────────────────────────────────────────────────────
   AVAILABLE  1     Sedan      BMW M5 CS                     1143          2,000.00  -       -           -         
-  RENTED     2     Sport      Porsche 911 GT3 RS            1111          3,000.00  2       20-01-2026  31-01-2026
+  RENTED     2     Sport      Porsche 911 GT3 RS            1111          3,000.00  5       17-03-2026  31-03-2026
   AVAILABLE  3     Sport      Mercedes-Bnez C63 AMG         4425          2,400.00  -       -           -         
   RENTED     4     Sedan      Honda Accord RS G11           53424         1,400.00  3       17-02-2026  17-03-2026
-  AVAILABLE  5     Sedan      Porsche Panamera 4S           3133          2,300.00  -       -           -         
+  RENTED     5     Sedan      Porsche Panamera 4S           3133          2,300.00  4       01-01-2026  15-01-2026
   AVAILABLE  6     Hatchback  Toyota GR Yaris               2223          2,200.00  -       -           -         
   AVAILABLE  7     Sedan      Toyota Yaris Ativ             6888          1,300.00  -       -           -         
   AVAILABLE  8     Pickup     Ford Raptor V6                13414         1,000.00  -       -           -         
   AVAILABLE  9     Other      Mitsubishi Strada G-Wagon 4x  8871            700.00  -       -           -         
+  RENTED     10    SUV        BMW X3                        2222          2,000.00  4       07-10-2026  15-10-2026
+  RENTED     11    Pickup     Toyota Hirux                  2425          1,200.00  3       15-01-2026  17-02-2026
   ────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
   ┌─ SUMMARY ────────────────────────────────────────────────────────────────────┐
-  │ Total cars      : 9  (Active 9 / Deleted 0)                                  │
-  │ Available       : 7    Rented : 2    Utilization : 22%                       │
-  │ Daily rate      : Min 700.00 / Max 3,000.00 / Avg 1,811.11 THB               │
-  │ Rented income   : 4,400.00 THB/day (from cars currently rented)              │
+  │ Total cars      : 11  (Active 11 / Deleted 0)                                │
+  │ Available       : 6    Rented : 5    Utilization : 45%                       │
+  │ Daily rate      : Min 700.00 / Max 3,000.00 / Avg 1,772.73 THB               │
+  │ Rented income   : 9,900.00 THB/day (from cars currently rented)              │
   └──────────────────────────────────────────────────────────────────────────────┘
   Fleet by Category  (bar = % rented)
     Hatchback  [          ]    0%  (0/1 rented)
     Other      [          ]    0%  (0/1 rented)
-    Pickup     [          ]    0%  (0/1 rented)
-    Sedan      [||        ]   25%  (1/4 rented)
+    Pickup     [|||||     ]   50%  (1/2 rented)
+    SUV        [||||||||||]  100%  (1/1 rented)
+    Sedan      [|||||     ]   50%  (2/4 rented)
     Sport      [|||||     ]   50%  (1/2 rented)
 
 ==================================================================================================================

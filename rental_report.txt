@@ -1,6 +1,6 @@
 =========================================================================================
   CAR RENTAL MANAGEMENT SYSTEM  —  Rental History
-  Generated : 2026-10-06 09:41:49
+  Generated : 2026-10-07 09:32:14
   Data from : rentals.bin, customers.bin
 =========================================================================================
 
@@ -11,21 +11,27 @@
   Status   Rental  Car   Customer                    From        To             Total THB
   ───────────────────────────────────────────────────────────────────────────────────────
   OVERDUE  #1      2     Beam                        01-01-2026  15-01-2026     45,000.00
+  OVERDUE  #5      5     Ice                         01-01-2026  15-01-2026     34,500.00
   OVERDUE  #3      4     Kaiwaan                     17-02-2026  17-03-2026     40,600.00
   OVERDUE  #4      2     Mew                         20-01-2026  31-01-2026     36,000.00
-  CLOSED   #2      9     Beam                        15-01-2026  31-01-2026     11,900.00
+  OVERDUE  #6      2     Bank                        17-03-2026  31-03-2026     45,000.00
+  RENTING  #9      10    Ice                         07-10-2026  15-10-2026     18,000.00
+  OVERDUE  #8      11    Kaiwaan                     15-01-2026  17-02-2026     40,800.00
   ───────────────────────────────────────────────────────────────────────────────────────
 
   ┌─ SUMMARY ────────────────────────────────────────────────────────────────────┐
-  │ Total rentals   : 4  (Open 3 / Closed 1)                                     │
-  │ By status       : Renting 0 / Booked 0 / Overdue 3 / Closed 1                │
-  │ Total value     : 133,500.00 THB  (Open 121,600.00 / Closed 11,900.00)       │
-  │ Average length  : 18.2 days per rental                                       │
+  │ Total rentals   : 7  (Open 7 / Closed 0)                                     │
+  │ By status       : Renting 1 / Booked 0 / Overdue 6 / Closed 0                │
+  │ Total value     : 259,900.00 THB  (Open 259,900.00 / Closed 0.00)            │
+  │ Average length  : 18.4 days per rental                                       │
   └──────────────────────────────────────────────────────────────────────────────┘
   !! Overdue !!
     Rental #1    Car 2    Beam  (due 15-01-2026)
+    Rental #5    Car 5    Ice  (due 15-01-2026)
     Rental #3    Car 4    Kaiwaan  (due 17-03-2026)
     Rental #4    Car 2    Mew  (due 31-01-2026)
+    Rental #6    Car 2    Bank  (due 31-03-2026)
+    Rental #8    Car 11   Kaiwaan  (due 17-02-2026)
 
 =========================================================================================
   END OF REPORT
